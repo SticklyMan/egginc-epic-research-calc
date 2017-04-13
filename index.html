@@ -1,0 +1,676 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Egg, Inc. Epic Research Costs Calculator</title>
+
+	<script src="underscore-min.js"></script>
+</head>
+<body>
+	<div id="content"></div>
+	<!-- Style (or lack thereof) -->
+	<style>
+		@font-face {
+			font-family: Always Together;
+			src: url("Always Together.otf");
+		}
+		#content {
+			max-width: 840px;
+			margin: 0 auto;
+		}
+		body {
+			font-family: Always Together;
+			background-color: rgb(191, 191, 191);
+			cursor: default;
+		}
+		.modal {
+			background-color: white;
+			border-radius: 25px;
+			padding-bottom: 15px;
+			margin-bottom: 25px;
+		}
+		.left {
+			float: left;
+		}
+		.right {
+			float: right;
+		}
+		.clear {
+			clear: both;
+		}
+		input, select, textarea, button {
+			font-family: inherit;
+		}
+		h1 {
+			text-align: center;
+			font-weight: lighter;
+			color: black;
+		}
+		h2 {
+			text-align: center;
+			font-weight: lighter;
+			color: white;
+			margin: 0 0 15px 0;
+			padding: 5px;
+			border-top-left-radius: 25px;
+			border-top-right-radius: 25px;
+			background-color: rgb(39, 110, 198);
+		}
+		h3 {
+			text-align: center;
+			font-weight: lighter;
+			color: black;
+			margin: 0;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			text-align: center;
+			font-size: 18px;
+		}
+		td, th {
+			padding: 5px;
+		}
+		.noborder {
+			border: none;
+		}
+		.noselect {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+		.inline {
+			display: inline-block;
+		}
+		table input[type='number'] {
+			width: 40px;
+		}
+		input[type='checkbox'] {
+			margin-left: 25px;
+		}
+
+		.innercontent {
+			padding: 0 15px 0 15px;
+		}
+		.innercontent textarea {
+			font-family: monospace;
+			font-size: 11px;
+			width: 100%;
+			margin-bottom: 2px;
+		}
+		.buttonrow {
+			height: 40px;
+		}
+		.buttonrow button {
+			font-size: 18px;
+			padding: 4px;
+		}
+
+		.padright {
+			margin-right: 25px;
+		}
+		.padleft {
+			margin-left: 25px;
+		}
+
+		.showdesc { display: table-cell; }
+		.showbonus { display: table-cell; }
+		.showspent { display: table-cell; }
+		.showremaining { display: table-cell; }
+		.showtotal { display: table-cell; }
+
+		.showdesc.hide { display: none; }
+		.showbonus.hide { display: none; }
+		.showspent.hide { display: none; }
+		.showremaining.hide { display: none; }
+		.showtotal.hide { display: none; }
+	</style>
+
+	<!-- Firefox, please -->
+	<style type="text/css">
+		@-moz-document url-prefix() {
+			button {
+				margin-top:-1px;
+			}
+		}
+	</style>
+
+	<!-- Template -->
+	<script type="text/template" class="template">
+		<h1>Egg, Inc. Epic Research Costs Calculator</h1>
+		<div class="modal">
+			<h2>Current Statistics</h2>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th class="showdesc">Description</th>
+					<th class="showbonus">Bonus</th>
+					<th>Level</th>
+					<th class="showspent">Spent</th>
+					<th class="showremaining">Remaining</th>
+					<th class="showtotal">Total Cost</th>
+				</tr>
+				<%	var tabindex = 0;
+					_.each( upgrades, function( upgrade, key ) {
+						tabindex++; %>
+					<tr>
+						<td><%- upgrade.title %></td>
+						<td class="showdesc"><%- upgrade.desc %></td>
+						<td class="showbonus" style="width: 86px"id="bonus-<%- key %>">-</td>
+						<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="lvl-<%- key %>" tabindex="<%- 10+tabindex %>"></div> / <%- upgrade.costs.length %></td>
+						<td class="showspent" style="width: 58px" id="spent-<%- key %>">-</td>
+						<td class="showremaining" style="width: 58px" id="remaining-<%- key %>">-</td>
+						<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
+					</tr>
+				<% }); %>
+				<tr>
+					<th class="noborder"></th>
+					<th class="noborder showdesc"></th>
+					<th class="noborder showbonus"></th>
+					<th id="total-levels"><%- totals.levels %></th>
+					<th id="total-spent" class="showspent"><%- totals.cost %></th>
+					<th id="total-remaining" class="showremaining"><%- totals.levels %></th>
+					<th class="showtotal"><%- totals.cost.toLocaleString() %></th>
+				</tr>
+			</table>
+			<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
+			<label class="noselect"><input type="checkbox" checked="true" id="chkbonus" tabindex="41"> Show Bonus</label>
+			<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
+			<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
+			<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
+		</div>
+
+		<div class="modal">
+			<h2>Future Planning</h2>
+			<div class="padright">
+				<div class="noselect inline right padleft">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
+				<button class="right" onclick="crackThePiggy()" tabindex="51">Crack Open</button>
+				<div class="noselect inline right">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
+			</div>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Level</th>
+					<th>Desired Increase</th>
+					<th>Cost</th>
+					<th>Next Price</th>
+					<th>Buy?</th>
+				</tr>
+				<%	var tabindex = 0;
+					_.each( upgrades, function( upgrade, key ) {
+						tabindex++; %>
+					<tr>
+						<td><%- upgrade.title %></td>
+						<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-lvl-<%- key %>" tabindex="<%- 100+tabindex %>"></div> / <%- upgrade.costs.length %></td>
+						<td style="width: 100px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-inc-<%- key %>" tabindex="<%- 200+tabindex %>"></div></td>
+						<td style="width: 82px" id="fut-cost-<%- key %>"></td>
+						<td style="width: 82px" id="fut-next-<%- key %>"></td>
+						<td><button id="fut-buy-<%- key %>" onclick="buy('<%- key %>')" tabindex="<%- 300+tabindex %>">Buy!</button></td>
+					</tr>
+				<% }); %>
+			</table>
+			<div class="innercontent" style="margin-top: 20px; margin-bottom: 20px;">
+				<div class="left">Desired Upgrade Cost: <b id="fut-upgrade-total"></b></div>
+				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-cost"></b></div>
+				<div class="right">Eggs Left to Obtain: <b id="fut-egg-remain"></b></div>
+				<div class="clear"></div>
+				<div class="left">Eggs Left to get: <b id="fut-upgrade-remain"></b></div>
+				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-piggy-cost"></b></div>
+				<div class="right">Eggs Left to Obtain (incl. Piggy Bank): <b id="fut-egg-remain-piggy"></b></div>
+			</div>
+		</div>
+
+
+		<h3>Current as of Egg, Inc. version 1.4.1</h3>
+		<h3><a target="_blank", href="https://www.reddit.com/r/EggsInc/comments/54e0g9/epic_research_costs_calculator/">Click here</a> for discussion, suggestions, and feedback!</h3>
+		<div style="height: 20px;"></div>
+
+		<div class="modal">
+			<h2>Import/Export</h2>
+			<div class="innercontent">
+				<textarea id="exportfield" rows="8" tabindex="400"></textarea>
+				<div class="buttonrow">
+					<button onclick="loadBase64()" class="left" tabindex="401">Load from Textfield</button>
+					<button onclick="exportBase64()" class="left" tabindex="402">Export to Textfield</button>
+					<button onclick="reset()" class="right" tabindex="403">Clear All Data</button>
+				</div>
+			</div>
+		</div>
+	</script>
+
+
+	<!-- Javascript -->
+	<script>
+	// Initial userData
+	var initialUserData = {
+		eggs: 0,
+		piggyBank: 0,
+		columns: {
+			desc: true,
+			bonus: true,
+			spent: true,
+			remaining: true,
+			total: true
+		},
+		upgrades: {
+			holdToHatch: 0,
+			epicHatchery: 0,
+			epicIntHatchery: 0,
+			videoDoubler: 0,
+			epicClucking: 0,
+			epicMultiplier: 0,
+			cheaperContractors: 0,
+			bustUnions: 0,
+			labUpgrade: 0,
+			siloQuality: 0,
+			siloCapacity: 0,
+			accountingTricks: 0,
+			soulFood: 0,
+			prestigeBonus: 0,
+			droneRewards: 0,
+			transportationLobbyists: 0,
+			warpShift: 0
+		},
+		increase: {
+			holdToHatch: 0,
+			epicHatchery: 0,
+			epicIntHatchery: 0,
+			videoDoubler: 0,
+			epicClucking: 0,
+			epicMultiplier: 0,
+			cheaperContractors: 0,
+			bustUnions: 0,
+			labUpgrade: 0,
+			siloQuality: 0,
+			siloCapacity: 0,
+			accountingTricks: 0,
+			soulFood: 0,
+			prestigeBonus: 0,
+			droneRewards: 0,
+			transportationLobbyists: 0,
+			warpShift: 0
+		}
+	}
+	if (localStorage.userData == undefined) {
+		localStorage.userData = JSON.stringify(initialUserData);
+	}
+
+
+	// Upgrade Data
+	var upgrades = {
+		holdToHatch: {
+			costs: [10, 34, 58, 82, 106, 130, 154, 178, 202, 226],
+			title: "Hold to Hatch",
+			desc: "Hold chicken button +2 chickens per second",
+			bonusDesc: "+{VAL}/SEC",
+			bonusVal: 2
+		},
+		epicHatchery: {
+			costs: [2, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 550, 600, 650, 700, 750, 800, 850, 900, 950],
+			title: "Epic Hatchery",
+			desc: "Increase hatechery refill rate by 10%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 10
+		},
+		epicIntHatchery: {
+			costs: [25, 73, 122, 171, 220, 268, 317, 366, 415, 463, 512, 561, 610, 658, 707, 756, 805, 853, 902, 951],
+			title: "Epic Int. Hatcheries",
+			desc: "Increase internal hatchery rate by 5%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 5
+		},
+		videoDoubler: {
+			costs: [25, 231, 437, 643, 850, 1056, 1262, 1468, 1675, 1881, 2087, 2293],
+			title: "Video Doubler Time",
+			desc: "Increase video doubler time by 30 min.",
+			bonusDesc: "+{VAL} min.",
+			bonusVal: 30
+		},
+		epicClucking: {
+			costs: [50, 95, 140, 185, 230, 275, 320, 365, 410, 455],
+			title: "Epic Clucking",
+			desc: "+0.1% egg value bonus for each running chicken",
+			bonusDesc: "+{VAL}% / chicken",
+			bonusVal: 0.1
+		},
+		epicMultiplier: {
+			costs: [10, 29, 49, 69, 89, 109, 129, 149, 168, 188, 208, 228, 248, 268, 288, 308, 327, 347, 367, 387, 407, 427, 447, 466, 486, 506, 526, 546, 566, 586, 606, 625, 645, 665, 685, 705, 725, 745, 764, 784, 804, 824, 844, 864, 884, 904, 923, 943, 963, 983, 1003, 1023, 1043, 1062, 1082, 1102, 1122, 1142, 1162, 1182, 1202, 1221, 1241, 1261, 1281, 1301, 1321, 1341, 1360, 1380, 1400, 1420, 1440, 1460, 1480],
+			title: "Epic Multiplier",
+			desc: "Increase max running chicken bonus by 0.2x!",
+			bonusDesc: "+{VAL}x MAX",
+			bonusVal: 0.2
+		},
+		cheaperContractors: {
+			costs: [20, 43, 66, 89, 112, 135, 158, 181, 204, 227],
+			title: "Cheaper Contractors",
+			desc: "Reduce hen house and silo build costs by 5%",
+			bonusDesc: "-{VAL}%",
+			bonusVal: 5
+		},
+		bustUnions: {
+			costs: [20, 28, 36, 44, 52, 60, 68, 76, 84, 92],
+			title: "Bust Unions",
+			desc: "Reduce vehicle hire costs by 5%",
+			bonusDesc: "-{VAL}%",
+			bonusVal: 5
+		},
+		labUpgrade: {
+			costs: [25, 47, 70, 92, 115, 137, 160, 182, 205, 227],
+			title: "Lab Upgrade",
+			desc: "Reduce research costs by 5%",
+			bonusDesc: "-{VAL}%",
+			bonusVal: 5
+		},
+		siloQuality: {
+			costs: [5, 11, 17, 23, 29, 35, 41, 47, 54, 60, 66, 72, 78, 84, 90, 96, 103, 109, 115, 121, 127, 133, 139, 145, 152, 158, 164, 170, 176, 182, 188, 194, 201, 207, 213, 219, 225, 231, 237, 243],
+			title: "Silo Quality",
+			desc: "Increase silo quality by 2%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 2
+		},
+		siloCapacity: {
+			costs: [100, 115, 130, 145, 160, 175, 190, 205, 220, 235],
+			title: "Silo Capacity",
+			desc: "Increase away time per silo by 6 min",
+			bonusDesc: "+{VAL} min.",
+			bonusVal: 6
+		},
+		accountingTricks: {
+			costs: [25, 272, 520, 767, 1015, 1262, 1510, 1757, 2005, 2252],
+			title: "Accounting Tricks",
+			desc: "Increase farm valuation by 5%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 5
+		},
+		soulFood: {
+			costs: [100, 126, 153, 180, 206, 233, 260, 286, 313, 340, 366, 393, 420, 446, 473, 500, 526, 553, 580, 606, 633, 660, 686, 713, 740, 766, 793, 820, 846, 873, 900, 926, 953, 980, 1006, 1033, 1060, 1086, 1113, 1140, 1166, 1193, 1220, 1246, 1273, 1300, 1326, 1353, 1380, 1406, 1433, 1460, 1486, 1513, 1540, 1566, 1593, 1620, 1646, 1673, 1700, 1726, 1753, 1780, 1806, 1833, 1860, 1886, 1913, 1940, 1966, 1993, 2020, 2046, 2073, 2100, 2126, 2153, 2180, 2206, 2233, 2260, 2286, 2313, 2340, 2366, 2393, 2420, 2446, 2473],
+			title: "Soul Food",
+			desc: "Increase bonus per soul egg by +1%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 1
+		},
+		prestigeBonus: {
+			costs: [4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800, 5900],
+			title: "Prestige Bonus",
+			desc: "Earn +10% soul eggs when you prestige",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 10
+		},
+		droneRewards: {
+			costs: [100, 345, 590, 835, 1080, 1325, 1570, 1815, 2060, 2305, 2550, 2795, 3040, 3285, 3530, 3775, 4020, 4265, 4510, 4755],
+			title: "Drone Rewards",
+			desc: "Increase your chances for bigger drone rewards by 10%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 10
+		},
+		transportationLobbyists: {
+			costs: [250, 362, 475, 587, 700, 812, 925, 1037, 1150, 1262, 1375, 1487, 1600, 1712, 1825, 1937, 2050, 2162, 2275, 2387],
+			title: "Transportation Lobbyists",
+			desc: "Increase vehicle capacity by 5%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 5
+		},
+		warpShift: {
+			costs: [250, 546, 843, 1140, 1437, 1734, 2031, 2328, 2625, 2921, 3218, 3515, 3812, 4109, 4406, 4703],
+			title: "Warp Shift",
+			desc: "Increases long warp time by 1 hour.",
+			bonusDesc: "+{VAL} hrs",
+			bonusVal: 1
+		}
+	};
+
+
+	// Data persistence helpers
+	function save() {
+		localStorage.userData = JSON.stringify(userData);
+	}
+
+	function reset() {
+		userData = JSON.parse(JSON.stringify(initialUserData));
+		save();
+		populateInputs();
+	}
+
+	function load(firsttime, fromstring) {
+		// Should prevent errors when the userData structure has changed compared to the user's localstorage.
+		// Also REAL fancy because thanks javascript.
+		var localData = JSON.parse(fromstring || localStorage.userData);
+		var initialData = JSON.parse(JSON.stringify(initialUserData));
+
+		var localColumns = JSON.parse(JSON.stringify(localData.columns || {}));
+		var initialColumns = JSON.parse(JSON.stringify(initialUserData.columns));
+
+		var localUpgrades = JSON.parse(JSON.stringify(localData.upgrades || {}));
+		var initialUpgrades = JSON.parse(JSON.stringify(initialUserData.upgrades));
+
+		var localIncrease = JSON.parse(JSON.stringify(localData.increase || {}));
+		var initialIncrease = JSON.parse(JSON.stringify(initialUserData.increase));
+
+		userData = _.extend(initialData, localData);
+		userData.upgrades = _.extend(initialUpgrades, localUpgrades);
+		userData.columns = _.extend(initialColumns, localColumns);
+		userData.increase = _.extend(initialIncrease, localIncrease);
+
+		if (!firsttime) {
+			populateInputs();
+		}
+	}
+
+	function exportBase64() {
+		var exportfield = document.querySelector("#exportfield");
+		exportfield.value = btoa(JSON.stringify(userData));
+		exportfield.select();
+	}
+
+	function loadBase64() {
+		load(false, atob(document.querySelector("#exportfield").value));
+	}
+
+
+	// Helper methods for dynamic data calculations, refreshing UI
+	function calculate() {
+		var totalSpentLevels = 0;
+		var totalSpent = 0;
+		var totalDesiredUpgrade = 0;
+		_.each(upgrades, function(upgrade, key) {
+			// Statistics
+			var spent = 0;
+			for (i=0; i<=userData.upgrades[key]-1; i++) {
+				spent += upgrade.costs[i];
+			}
+			totalSpentLevels += userData.upgrades[key];
+			totalSpent += spent;
+			document.querySelector("#spent-"+key).innerHTML = spent.toLocaleString();
+			document.querySelector("#remaining-"+key).innerHTML = (upgrade.total - spent).toLocaleString();
+			document.querySelector("#bonus-"+key).innerHTML = userData.upgrades[key] == 0 ? "&ndash;" : upgrade.bonusDesc.replace("{VAL}", Math.round((upgrade.bonusVal * userData.upgrades[key]) * 100) / 100);
+
+			// Futures
+			var increaseCost = 0;
+			for (i=userData.upgrades[key]; i<userData.upgrades[key]+userData.increase[key]; i++) {
+				increaseCost += upgrade.costs[i];
+			}
+			totalDesiredUpgrade += increaseCost;
+			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost == 0 ? "&ndash;" : increaseCost.toLocaleString();
+			var nextCost = upgrade.costs[userData.upgrades[key]];
+			document.querySelector("#fut-next-"+key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
+
+			// Buy?
+			document.querySelector("#fut-buy-"+key).disabled = upgrade.costs.length == userData.upgrades[key] || userData.eggs < nextCost;
+		});
+		document.querySelector("#total-levels").innerHTML = totalSpentLevels + " / " + totals.levels;
+		document.querySelector("#total-spent").innerHTML = totalSpent.toLocaleString();
+		document.querySelector("#total-remaining").innerHTML = (totals.cost - totalSpent).toLocaleString();
+		document.querySelector("#fut-upgrade-total").innerHTML = totalDesiredUpgrade.toLocaleString();
+		document.querySelector("#fut-upgrade-remain").innerHTML = Math.max((totalDesiredUpgrade - userData.eggs), 0).toLocaleString();
+
+		var remain = Math.max((totals.cost - totalSpent - userData.eggs), 0);
+		var remainPlusPiggy = Math.max((remain-userData.piggyBank), 0);
+		document.querySelector("#fut-egg-remain").innerHTML = remain.toLocaleString();
+		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(Math.ceil(remain/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
+		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
+		document.querySelector("#fut-egg-remain-piggy-cost").innerHTML = "$"+(Math.ceil(remainPlusPiggy/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
+	}
+
+	function populateInputs() {
+		_.each(upgrades, function(upgrade, key) {
+			document.querySelector("#lvl-"+key).value = userData.upgrades[key];
+			updateLevel(key, true);
+			document.querySelector("#fut-inc-"+key).value = userData.increase[key];
+			document.querySelector("#fut-inc-"+key).max = upgrade.costs.length - userData.upgrades[key];
+			updateIncrease(key);
+		});
+		_.each(userData.columns, function(value, key) {
+			document.querySelector("#chk"+key).checked = userData.columns[key];
+			updateColumn(key, userData.columns[key]);
+		});
+		document.querySelector("#goldeneggs").value = userData.eggs
+		document.querySelector("#piggybank").value = userData.piggyBank
+		calculate();
+	}
+
+	function buy(key) {
+		document.querySelector("#lvl-"+key).value++;
+		document.querySelector("#fut-inc-"+key).value--;
+		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]];
+		// TODO: Desired increase decrease by 1. Better way to do this?
+		userUpdateIncrease(key);
+		userUpdateLevel(key, true);
+		userUpdateEggs();
+	}
+
+	function crackThePiggy() {
+		var eggs = document.querySelector("#goldeneggs");
+		var bank = document.querySelector("#piggybank");
+		eggs.value = parseInt(eggs.value) + parseInt(bank.value);
+		bank.value = 0;
+		userUpdateEggs();
+	}
+
+	function userUpdateColumn(key, show) {
+		updateColumn(key, show);
+		userData.columns[key] = show;
+		calculate();
+		save();
+	}
+
+	function updateColumn(key, show) {
+		var items = document.querySelectorAll(".show"+key);
+		for (var i=0; i<items.length; i++) {
+			var item = items[i];
+			// One would think I could use classList.toggle with a forced parameter, but IE11 proved me wrong.
+			if (show) {
+				item.classList.remove("hide");
+			}
+			else {
+				item.classList.add("hide");
+			}
+		}
+	}
+
+	function userUpdateLevel(key, isA) {
+		var newVal = updateLevel(key, isA);
+		userData.upgrades[key] = newVal;
+
+		document.querySelector("#fut-inc-"+key).max = upgrades[key].costs.length - newVal;
+		userUpdateIncrease(key);
+
+		calculate();
+		save();
+	}
+
+	function updateLevel(key, isA) {
+		var inputA = document.querySelector("#lvl-"+key);
+		var inputB = document.querySelector("#fut-lvl-"+key);
+		var newVal = isA ? (parseInt(inputA.value) || 0) : (parseInt(inputB.value) || 0);
+		newVal = Math.min(Math.max(newVal, 0), upgrades[key].costs.length);
+		inputA.value = newVal;
+		inputB.value = newVal;
+
+		return newVal;
+	}
+
+	function userUpdateIncrease(key) {
+		var newVal = updateIncrease(key);
+		userData.increase[key] = newVal;
+		calculate();
+		save();
+	}
+
+	function updateIncrease(key) {
+		var input = document.querySelector("#fut-inc-"+key);
+		var newVal = parseInt(input.value) || 0;
+		newVal = Math.min(Math.max(newVal, 0), (upgrades[key].costs.length - userData.upgrades[key]));
+		input.value = newVal;
+		return newVal;
+	}
+
+	function userUpdateEggs() {
+		var result = updateEggs();
+		userData.eggs = result[0];
+		userData.piggyBank = result[1];
+		calculate();
+		save();
+	}
+
+	function updateEggs() {
+		var eggs = document.querySelector("#goldeneggs");
+		var bank = document.querySelector("#piggybank");
+		var newEggs = parseInt(eggs.value) || 0;
+		var newBank = parseInt(bank.value) || 0;
+		newEggs = Math.max(newEggs, 0);
+		newBank = Math.max(newBank, 0);
+		eggs.value = newEggs;
+		bank.value = newBank;
+		return [newEggs, newBank];
+	}
+
+
+	// Initialize data
+	var totals = {
+		cost: 0,
+		levels: 0
+	};
+	_.each(upgrades, function(upgrade, key) {
+		upgrade.total = upgrade.costs.reduce(function(prev, cur){ return prev+cur; } );
+		totals.cost += upgrade.total
+		totals.levels += upgrade.costs.length;
+	});
+	load(true);
+
+	// Pre-compile and render template
+	var template = _.template(
+		document.querySelector("script.template").innerHTML
+	);
+	document.querySelector("#content").innerHTML = template({
+		userData: userData,
+		upgrades: upgrades,
+		totals: totals
+	});
+
+	populateInputs();
+
+	// Set up events
+	_.each(upgrades, function(upgrade, key) {
+		document.querySelector("#lvl-"+key).addEventListener("change", function() { userUpdateLevel(key, true); });
+		document.querySelector("#fut-lvl-"+key).addEventListener("change", function() { userUpdateLevel(key, false); });
+		document.querySelector("#fut-inc-"+key).addEventListener("change", function() { userUpdateIncrease(key); });
+		document.querySelector("#fut-buy-"+key).addEventListener("change", function() { buy(key); });
+	});
+
+	_.each(userData.columns, function(val, key) {
+		document.querySelector("#chk"+key).addEventListener("change", function(ev) { userUpdateColumn(key, ev.target.checked); });
+	});
+
+	var exportfield = document.querySelector("#exportfield");
+	exportfield.onfocus = function() {
+		exportfield.select();
+	}
+
+	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs );
+	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs );
+
+	</script>
+</body>
+</html>
