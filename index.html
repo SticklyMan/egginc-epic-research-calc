@@ -121,6 +121,7 @@
 		.showremaining { display: table-cell; }
 		.showtotal { display: table-cell; }
 
+		tr.hide { display: none; }
 		.showdesc.hide { display: none; }
 		.showbonus.hide { display: none; }
 		.showspent.hide { display: none; }
@@ -155,7 +156,7 @@
 				<%	var tabindex = 0;
 					_.each( upgrades, function( upgrade, key ) {
 						tabindex++; %>
-					<tr>
+					<tr id="upgradeRow-<%- key %>">
 						<td><%- upgrade.title %></td>
 						<td class="showdesc"><%- upgrade.desc %></td>
 						<td class="showbonus" style="width: 86px"id="bonus-<%- key %>">-</td>
@@ -180,6 +181,7 @@
 			<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
 			<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
 			<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
+			<label class="noselect"><input type="checkbox" checked="false" id="sethidecompleted" tabindex="45"> Hide Completed</label>
 		</div>
 
 		<div class="modal">
@@ -201,7 +203,7 @@
 				<%	var tabindex = 0;
 					_.each( upgrades, function( upgrade, key ) {
 						tabindex++; %>
-					<tr>
+					<tr id="planRow-<%- key %>">
 						<td><%- upgrade.title %></td>
 						<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-lvl-<%- key %>" tabindex="<%- 100+tabindex %>"></div> / <%- upgrade.costs.length %></td>
 						<td style="width: 100px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-inc-<%- key %>" tabindex="<%- 200+tabindex %>"></div></td>
@@ -246,6 +248,7 @@
 	var initialUserData = {
 		eggs: 0,
 		piggyBank: 0,
+		hideCompleted: false,
 		columns: {
 			desc: true,
 			bonus: true,
@@ -497,6 +500,18 @@
 
 			// Buy?
 			document.querySelector("#fut-buy-"+key).disabled = upgrade.costs.length == userData.upgrades[key] || userData.eggs < nextCost;
+
+			// Visiblity if complete
+			var upgradeRow = document.querySelector("#upgradeRow-"+key);
+			var planRow = document.querySelector("#planRow-"+key);
+			if (userData.hideCompleted && userData.upgrades[key] >= upgrade.costs.length) {
+				planRow.classList.add("hide");
+				upgradeRow.classList.add("hide");
+			}
+			else {
+				planRow.classList.remove("hide");
+				upgradeRow.classList.remove("hide");
+			}
 		});
 		document.querySelector("#total-levels").innerHTML = totalSpentLevels + " / " + totals.levels;
 		document.querySelector("#total-spent").innerHTML = totalSpent.toLocaleString();
@@ -524,6 +539,7 @@
 			document.querySelector("#chk"+key).checked = userData.columns[key];
 			updateColumn(key, userData.columns[key]);
 		});
+		document.querySelector("#sethidecompleted").checked = userData.hideCompleted;
 		document.querySelector("#goldeneggs").value = userData.eggs;
 		document.querySelector("#piggybank").value = userData.piggyBank;
 		calculate();
@@ -550,6 +566,12 @@
 	function userUpdateColumn(key, show) {
 		updateColumn(key, show);
 		userData.columns[key] = show;
+		calculate();
+		save();
+	}
+
+	function setRowsHidden(value) {
+		userData.hideCompleted = value;
 		calculate();
 		save();
 	}
@@ -661,6 +683,8 @@
 	_.each(userData.columns, function(val, key) {
 		document.querySelector("#chk"+key).addEventListener("change", function(ev) { userUpdateColumn(key, ev.target.checked); });
 	});
+
+	document.querySelector("#sethidecompleted").addEventListener("change", function(ev) { setRowsHidden(ev.target.checked); });
 
 	var exportfield = document.querySelector("#exportfield");
 	exportfield.onfocus = function() {
