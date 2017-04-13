@@ -292,8 +292,8 @@
 			transportationLobbyists: 0,
 			warpShift: 0
 		}
-	}
-	if (localStorage.userData == undefined) {
+	};
+	if (localStorage.userData === undefined) {
 		localStorage.userData = JSON.stringify(initialUserData);
 	}
 
@@ -525,8 +525,8 @@
 			document.querySelector("#chk"+key).checked = userData.columns[key];
 			updateColumn(key, userData.columns[key]);
 		});
-		document.querySelector("#goldeneggs").value = userData.eggs
-		document.querySelector("#piggybank").value = userData.piggyBank
+		document.querySelector("#goldeneggs").value = userData.eggs;
+		document.querySelector("#piggybank").value = userData.piggyBank;
 		calculate();
 	}
 
@@ -534,7 +534,7 @@
 		document.querySelector("#lvl-"+key).value++;
 		document.querySelector("#fut-inc-"+key).value--;
 		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]];
-		// TODO: Desired increase decrease by 1. Better way to do this?
+
 		userUpdateIncrease(key);
 		userUpdateLevel(key, true);
 		userUpdateEggs();
@@ -634,7 +634,7 @@
 	};
 	_.each(upgrades, function(upgrade, key) {
 		upgrade.total = upgrade.costs.reduce(function(prev, cur){ return prev+cur; } );
-		totals.cost += upgrade.total
+		totals.cost += upgrade.total;
 		totals.levels += upgrade.costs.length;
 	});
 	load(true);
@@ -666,7 +666,7 @@
 	var exportfield = document.querySelector("#exportfield");
 	exportfield.onfocus = function() {
 		exportfield.select();
-	}
+	};
 
 	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs );
 	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs );
