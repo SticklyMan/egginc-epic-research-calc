@@ -14,7 +14,7 @@
 			src: url("Always Together.otf");
 		}
 		#content {
-			max-width: 840px;
+			max-width: 860px;
 			margin: 0 auto;
 		}
 		body {
@@ -236,7 +236,7 @@
 			</div>
 		</div>
 
-		<h3>Current as of Egg, Inc. version 1.4.1</h3>
+		<h3>Current as of Egg, Inc. version 1.5</h3>
 		<h3><a target="_blank", href="https://www.reddit.com/r/EggsInc/comments/54e0g9/epic_research_costs_calculator/">Click here</a> for discussion, suggestions, and feedback!</h3>
 		<h3><a target="_blank", href="https://github.com/SticklyMan/egginc-epic-research-calc/">It's on GitHub for some reason!</a></h3>
 	</script>
@@ -268,6 +268,8 @@
 			labUpgrade: 0,
 			siloQuality: 0,
 			siloCapacity: 0,
+			internalHatcherySharing: 0,
+			internalHatcheryCalm: 0,
 			accountingTricks: 0,
 			soulFood: 0,
 			prestigeBonus: 0,
@@ -287,6 +289,8 @@
 			labUpgrade: 0,
 			siloQuality: 0,
 			siloCapacity: 0,
+			internalHatcherySharing: 0,
+			internalHatcheryCalm: 0,
 			accountingTricks: 0,
 			soulFood: 0,
 			prestigeBonus: 0,
@@ -345,14 +349,14 @@
 			bonusVal: 0.2
 		},
 		cheaperContractors: {
-			costs: [20, 43, 66, 89, 112, 135, 158, 181, 204, 227],
+			costs: [20, 68, 116, 164, 212, 260, 308, 356, 404, 452],
 			title: "Cheaper Contractors",
 			desc: "Reduce hen house and silo build costs by 5%",
 			bonusDesc: "-{VAL}%",
 			bonusVal: 5
 		},
 		bustUnions: {
-			costs: [20, 28, 36, 44, 52, 60, 68, 76, 84, 92],
+			costs: [20, 68, 116, 164, 212, 260, 308, 356, 404, 452],
 			title: "Bust Unions",
 			desc: "Reduce vehicle hire costs by 5%",
 			bonusDesc: "-{VAL}%",
@@ -373,21 +377,35 @@
 			bonusVal: 2
 		},
 		siloCapacity: {
-			costs: [100, 115, 130, 145, 160, 175, 190, 205, 220, 235],
+			costs: [100, 130, 160, 190, 220, 250, 280, 310, 340, 370],
 			title: "Silo Capacity",
 			desc: "Increase away time per silo by 6 min",
 			bonusDesc: "+{VAL} min.",
 			bonusVal: 6
 		},
+		internalHatcherySharing: {
+			costs: [250, 475, 700, 925, 1150, 1375, 1600, 1825, 2050, 2275],
+			title: "Internal Hatchery Sharing",
+			desc: "Full habs' internal hatcheries send +10% chicks to other habs",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 10
+		},
+		internalHatcheryCalm: {
+			costs: [10, 109, 209, 308, 408, 507, 607, 706, 806, 905, 1005, 1104, 1204, 1303, 1403, 1502, 1602, 1701, 1801, 1900],
+			title: "Internal Hatchery Calm",
+			desc: "Increase internal hatchery rate by 10% while away",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 10
+		},
 		accountingTricks: {
-			costs: [25, 272, 520, 767, 1015, 1262, 1510, 1757, 2005, 2252],
+			costs: [25, 223, 422, 621, 820, 1018, 1217, 1416, 1615, 1813, 2012, 2211, 2410, 2608, 2807, 3006, 3205, 3403, 3602, 3801],
 			title: "Accounting Tricks",
 			desc: "Increase farm valuation by 5%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 5
 		},
 		soulFood: {
-			costs: [100, 126, 153, 180, 206, 233, 260, 286, 313, 340, 366, 393, 420, 446, 473, 500, 526, 553, 580, 606, 633, 660, 686, 713, 740, 766, 793, 820, 846, 873, 900, 926, 953, 980, 1006, 1033, 1060, 1086, 1113, 1140, 1166, 1193, 1220, 1246, 1273, 1300, 1326, 1353, 1380, 1406, 1433, 1460, 1486, 1513, 1540, 1566, 1593, 1620, 1646, 1673, 1700, 1726, 1753, 1780, 1806, 1833, 1860, 1886, 1913, 1940, 1966, 1993, 2020, 2046, 2073, 2100, 2126, 2153, 2180, 2206, 2233, 2260, 2286, 2313, 2340, 2366, 2393, 2420, 2446, 2473],
+			costs: [100, 127, 155, 183, 211, 239, 267, 295, 322, 350, 378, 406, 434, 462, 490, 517, 545, 573, 601, 629, 657, 685, 712, 740, 768, 796, 824, 852, 880, 907, 935, 963, 991, 1019, 1047, 1075, 1102, 1130, 1158, 1186, 1214, 1242, 1270, 1297, 1325, 1353, 1381, 1409, 1437, 1465, 1492, 1520, 1548, 1576, 1604, 1632, 1660, 1687, 1715, 1743, 1771, 1799, 1827, 1855, 1882, 1910, 1938, 1966, 1994, 2022, 2050, 2077, 2105, 2133, 2161, 2189, 2217, 2245, 2272, 2300, 2328, 2356, 2384, 2412, 2440, 2467, 2495, 2523, 2551, 2579, 2607, 2635, 2662, 2690, 2718, 2746, 2774, 2802, 2830, 2857, 2885, 2913, 2941, 2969, 2997, 3025, 3052, 3080, 3108, 3136, 3164, 3192, 3220, 3247, 3275, 3303, 3331, 3359, 3387, 3415, 3442, 3470, 3498, 3526, 3554, 3582, 3610, 3637, 3665, 3693, 3721, 3749, 3777, 3805, 3832, 3860, 3888, 3916, 3944, 3972],
 			title: "Soul Food",
 			desc: "Increase bonus per soul egg by +1%",
 			bonusDesc: "+{VAL}%",
