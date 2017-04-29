@@ -128,6 +128,10 @@
       margin-bottom: 14px;
     }
 
+    .bold-text {
+      font-weight: bold;
+    }
+
 		.showdesc { display: table-cell; }
 		.showbonus { display: table-cell; }
 		.showspent { display: table-cell; }
@@ -179,14 +183,14 @@
 						<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
 					</tr>
 				<% }); %>
-				<tr>
-					<th class="noborder"></th>
-					<th class="noborder showdesc"></th>
-					<th class="noborder showbonus"></th>
-					<th id="total-levels"><%- totals.levels %></th>
-					<th id="total-spent" class="showspent"><%- totals.cost %></th>
-					<th id="total-remaining" class="showremaining"><%- totals.levels %></th>
-					<th class="showtotal"><%- totals.cost.toLocaleString() %></th>
+				<tr class="bold-text">
+					<td class="noborder"></th>
+					<td class="noborder showdesc"></th>
+					<td class="noborder showbonus"></th>
+					<td id="total-levels"><%- totals.levels %></th>
+					<td id="total-spent" class="showspent"><%- totals.cost %></th>
+					<td id="total-remaining" class="showremaining"><%- totals.levels %></th>
+					<td class="showtotal"><%- totals.cost.toLocaleString() %></th>
 				</tr>
 			</table>
 			<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
