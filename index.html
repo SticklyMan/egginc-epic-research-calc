@@ -77,6 +77,9 @@
 		td, th {
 			padding: 5px;
 		}
+    .odd td, th {
+      background-color: #e5e5e5;
+    }
 		.noborder {
 			border: none;
 		}
@@ -153,7 +156,7 @@
 		<h1>Egg, Inc. Epic Research Costs Calculator</h1>
 		<div class="modal">
 			<h2>Current Statistics</h2>
-			<table>
+			<table id="stats-table">
 				<tr>
 					<th>Name</th>
 					<th class="showdesc">Description</th>
@@ -201,7 +204,7 @@
 				<button class="right" onclick="crackThePiggy()" tabindex="51">Crack Open</button>
 				<div class="noselect inline right">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
 			</div>
-			<table>
+			<table id="future-table">
 				<tr>
 					<th>Name</th>
 					<th>Level</th>
@@ -553,7 +556,10 @@
 		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(Math.ceil(remain/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
 		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
 		document.querySelector("#fut-egg-remain-piggy-cost").innerHTML = "$"+(Math.ceil(remainPlusPiggy/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
-	}
+
+    // Re-stripe tables
+    stripeTables();
+  }
 
 	function populateInputs() {
 		_.each(upgrades, function(upgrade, key) {
@@ -675,6 +681,20 @@
 		return [newEggs, newBank];
 	}
 
+  function stripeTables() {
+    // There's probably a way to simplify this.
+    var odd = true;
+    $('#stats-table tr:visible').each(function() {
+      $(this).removeClass('odd even').addClass(odd?'odd':'even');
+      odd=!odd
+    });
+
+    var odd = true;
+    $('#future-table tr:visible').each(function() {
+      $(this).removeClass('odd even').addClass(odd?'odd':'even');
+      odd=!odd
+    });
+  }
 
 	// Initialize data
 	var totals = {
