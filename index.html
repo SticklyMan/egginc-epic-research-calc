@@ -5,11 +5,11 @@
 
 	<script src="underscore-min.js"></script>
 
-  <script
-    src="https://code.jquery.com/jquery-3.2.1.min.js"
-    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous">
-  </script>
+	<script
+		src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous">
+	</script>
 
 </head>
 <body>
@@ -77,9 +77,9 @@
 		td, th {
 			padding: 5px;
 		}
-    .odd td, th {
-      background-color: #e5e5e5;
-    }
+		.odd td, th {
+			background-color: #e5e5e5;
+		}
 		.noborder {
 			border: none;
 		}
@@ -124,13 +124,13 @@
 		.padleft {
 			margin-left: 25px;
 		}
-    .padbottom {
-      margin-bottom: 14px;
-    }
+		.padbottom {
+			margin-bottom: 14px;
+		}
 
-    .bold-text {
-      font-weight: bold;
-    }
+		.bold-text {
+			font-weight: bold;
+		}
 
 		.showdesc { display: table-cell; }
 		.showbonus { display: table-cell; }
@@ -561,9 +561,9 @@
 		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
 		document.querySelector("#fut-egg-remain-piggy-cost").innerHTML = "$"+(Math.ceil(remainPlusPiggy/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
-    // Re-stripe tables
-    stripeTables();
-  }
+		// Re-stripe tables
+		stripeTables();
+	}
 
 	function populateInputs() {
 		_.each(upgrades, function(upgrade, key) {
@@ -685,20 +685,20 @@
 		return [newEggs, newBank];
 	}
 
-  function stripeTables() {
-    // There's probably a way to simplify this.
-    var odd = true;
-    $('#stats-table tr:visible').each(function() {
-      $(this).removeClass('odd even').addClass(odd?'odd':'even');
-      odd=!odd
-    });
+	function stripeTables() {
+		// There's probably a way to simplify this.
+		var odd = true;
+		$('#stats-table tr:visible').each(function() {
+			$(this).removeClass('odd even').addClass(odd?'odd':'even');
+			odd=!odd
+		});
 
-    var odd = true;
-    $('#future-table tr:visible').each(function() {
-      $(this).removeClass('odd even').addClass(odd?'odd':'even');
-      odd=!odd
-    });
-  }
+		var odd = true;
+		$('#future-table tr:visible').each(function() {
+			$(this).removeClass('odd even').addClass(odd?'odd':'even');
+			odd=!odd
+		});
+	}
 
 	// Initialize data
 	var totals = {
