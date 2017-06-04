@@ -5,12 +5,6 @@
 
 	<script src="underscore-min.js"></script>
 
-	<script
-		src="https://code.jquery.com/jquery-3.2.1.min.js"
-		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-		crossorigin="anonymous">
-	</script>
-
 </head>
 <body>
 	<div id="content"></div>
@@ -686,18 +680,19 @@
 	}
 
 	function stripeTables() {
-		// There's probably a way to simplify this.
-		var odd = true;
-		$('#stats-table tr:visible').each(function() {
-			$(this).removeClass('odd even').addClass(odd?'odd':'even');
-			odd=!odd
-		});
+		stripeRows(document.querySelectorAll("#stats-table tr:not(.hide)"));
+		stripeRows(document.querySelectorAll("#future-table tr:not(.hide)"));
+	}
 
-		var odd = true;
-		$('#future-table tr:visible').each(function() {
-			$(this).removeClass('odd even').addClass(odd?'odd':'even');
-			odd=!odd
-		});
+	function stripeRows(rows) {
+		for (var i=0; i<rows.length; i++) {
+			if (i%2==0) {
+				rows[i].classList.add('odd');
+			}
+			else {
+				rows[i].classList.remove('odd');
+			}
+		};
 	}
 
 	// Initialize data
