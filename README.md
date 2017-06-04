@@ -3,7 +3,7 @@ The source code for http://royalphysique.net/eggs/
 
 This is a calculator to show prices of various Epic Research items and help you plan how you can spend your hard-earned golden eggs on the right things.
 
-Currently updated for Egg. Inc version 1.4.1.
+Currently updated for Egg. Inc version 1.5.1.
 
 Here's a reddit thread if that's your thing!
 https://www.reddit.com/r/EggsInc/comments/65e364/epic_research_costs_calculator/
