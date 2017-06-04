@@ -8,6 +8,9 @@ Currently updated for Egg. Inc version 1.4.1.
 Here's a reddit thread if that's your thing!
 https://www.reddit.com/r/EggsInc/comments/65e364/epic_research_costs_calculator/
 
+Special thanks to these contributors for taking their time to help improve this tool:  
+[derekpovah](https://github.com/derekpovah)
+
 Includes "Always Together" font by Skomii / PauloR:  
 http://www.dafont.com/always-together.font  
 
