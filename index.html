@@ -4,6 +4,13 @@
 	<title>Egg, Inc. Epic Research Costs Calculator</title>
 
 	<script src="underscore-min.js"></script>
+
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous">
+  </script>
+
 </head>
 <body>
 	<div id="content"></div>
@@ -70,6 +77,9 @@
 		td, th {
 			padding: 5px;
 		}
+    .odd td, th {
+      background-color: #e5e5e5;
+    }
 		.noborder {
 			border: none;
 		}
@@ -114,6 +124,13 @@
 		.padleft {
 			margin-left: 25px;
 		}
+    .padbottom {
+      margin-bottom: 14px;
+    }
+
+    .bold-text {
+      font-weight: bold;
+    }
 
 		.showdesc { display: table-cell; }
 		.showbonus { display: table-cell; }
@@ -143,7 +160,7 @@
 		<h1>Egg, Inc. Epic Research Costs Calculator</h1>
 		<div class="modal">
 			<h2>Current Statistics</h2>
-			<table>
+			<table id="stats-table">
 				<tr>
 					<th>Name</th>
 					<th class="showdesc">Description</th>
@@ -166,14 +183,14 @@
 						<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
 					</tr>
 				<% }); %>
-				<tr>
-					<th class="noborder"></th>
-					<th class="noborder showdesc"></th>
-					<th class="noborder showbonus"></th>
-					<th id="total-levels"><%- totals.levels %></th>
-					<th id="total-spent" class="showspent"><%- totals.cost %></th>
-					<th id="total-remaining" class="showremaining"><%- totals.levels %></th>
-					<th class="showtotal"><%- totals.cost.toLocaleString() %></th>
+				<tr class="bold-text">
+					<td class="noborder"></th>
+					<td class="noborder showdesc"></th>
+					<td class="noborder showbonus"></th>
+					<td id="total-levels"><%- totals.levels %></th>
+					<td id="total-spent" class="showspent"><%- totals.cost %></th>
+					<td id="total-remaining" class="showremaining"><%- totals.levels %></th>
+					<td class="showtotal"><%- totals.cost.toLocaleString() %></th>
 				</tr>
 			</table>
 			<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
@@ -187,11 +204,11 @@
 		<div class="modal">
 			<h2>Future Planning</h2>
 			<div class="padright">
-				<div class="noselect inline right padleft">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
+				<div class="noselect inline right padleft padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
 				<button class="right" onclick="crackThePiggy()" tabindex="51">Crack Open</button>
 				<div class="noselect inline right">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
 			</div>
-			<table>
+			<table id="future-table">
 				<tr>
 					<th>Name</th>
 					<th>Level</th>
@@ -543,7 +560,10 @@
 		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(Math.ceil(remain/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
 		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
 		document.querySelector("#fut-egg-remain-piggy-cost").innerHTML = "$"+(Math.ceil(remainPlusPiggy/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
-	}
+
+    // Re-stripe tables
+    stripeTables();
+  }
 
 	function populateInputs() {
 		_.each(upgrades, function(upgrade, key) {
@@ -665,6 +685,20 @@
 		return [newEggs, newBank];
 	}
 
+  function stripeTables() {
+    // There's probably a way to simplify this.
+    var odd = true;
+    $('#stats-table tr:visible').each(function() {
+      $(this).removeClass('odd even').addClass(odd?'odd':'even');
+      odd=!odd
+    });
+
+    var odd = true;
+    $('#future-table tr:visible').each(function() {
+      $(this).removeClass('odd even').addClass(odd?'odd':'even');
+      odd=!odd
+    });
+  }
 
 	// Initialize data
 	var totals = {
