@@ -197,10 +197,13 @@
 
 		<div class="modal">
 			<h2>Future Planning</h2>
-			<div class="padright">
-				<div class="noselect inline right padleft padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
-				<button class="right" onclick="crackThePiggy()" tabindex="51">Crack Open</button>
-				<div class="noselect inline right">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
+			<div class="padright padleft">
+				<div class="noselect inline left">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
+				<div class="noselect inline left padleft padbottom">Piggy Level <input type="number" min="1" id="piggylevel" tabindex="52"style="width: 38px"> +<span id="piggybonus">0</span>%</div>
+				<div class="noselect inline left" style="margin-left: 4px">(+<span id="piggybonuscalc">0</span>)</div>
+
+				<button class="right" id="crackpiggy" onclick="crackThePiggy()" tabindex="51">Crack Open (+<span id="piggycracktotal">0</span>)</button>
+				<div class="noselect inline right padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="53"></div>
 			</div>
 			<table id="future-table">
 				<tr>
@@ -247,7 +250,7 @@
 			</div>
 		</div>
 
-		<h3>Current as of Egg, Inc. version 1.5.1</h3>
+		<h3>Current as of Egg, Inc. version 1.5.5</h3>
 		<h3><a target="_blank", href="https://www.reddit.com/r/EggsInc/comments/65e364/epic_research_costs_calculator/">Click here</a> for discussion, suggestions, and feedback!</h3>
 		<h3><a target="_blank", href="https://github.com/SticklyMan/egginc-epic-research-calc/">It's on GitHub for some reason!</a></h3>
 	</script>
@@ -258,6 +261,7 @@
 	// Initial userData
 	var initialUserData = {
 		eggs: 0,
+		piggyLevel: 1,
 		piggyBank: 0,
 		hideCompleted: false,
 		columns: {
@@ -548,8 +552,19 @@
 		document.querySelector("#fut-upgrade-total").innerHTML = totalDesiredUpgrade.toLocaleString();
 		document.querySelector("#fut-upgrade-remain").innerHTML = Math.max((totalDesiredUpgrade - userData.eggs), 0).toLocaleString();
 
+		// Piggy Bank calculations
+		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
+		var piggyBonusCalc = Math.floor(userData.piggyBank*(piggyBonus/100));
+		var piggyCrackTotal = userData.piggyBank + piggyBonusCalc;
+		document.querySelector("#piggybonus").innerHTML = piggyBonus;
+		document.querySelector("#piggybonuscalc").innerHTML = piggyBonusCalc;
+		document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal;
+
+		document.querySelector("#crackpiggy").disabled = userData.piggyBank < 300;
+
+		// Calculate remaining eggs
 		var remain = Math.max((totals.cost - totalSpent - userData.eggs), 0);
-		var remainPlusPiggy = Math.max((remain-userData.piggyBank), 0);
+		var remainPlusPiggy = Math.max((remain-piggyCrackTotal), 0);
 		document.querySelector("#fut-egg-remain").innerHTML = remain.toLocaleString();
 		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(Math.ceil(remain/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
 		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
@@ -557,6 +572,16 @@
 
 		// Re-stripe tables
 		stripeTables();
+	}
+
+	function getPiggyBankBonus(level) {
+		if (level === 1) {
+			return 2
+		}
+		if (level === 2) {
+			return 25
+		}
+		return 10*(level+1)
 	}
 
 	function populateInputs() {
@@ -573,6 +598,7 @@
 		});
 		document.querySelector("#sethidecompleted").checked = userData.hideCompleted;
 		document.querySelector("#goldeneggs").value = userData.eggs;
+		document.querySelector("#piggylevel").value = userData.piggyLevel;
 		document.querySelector("#piggybank").value = userData.piggyBank;
 		calculate();
 	}
@@ -589,9 +615,15 @@
 
 	function crackThePiggy() {
 		var eggs = document.querySelector("#goldeneggs");
+		var level = document.querySelector("#piggylevel");
 		var bank = document.querySelector("#piggybank");
-		eggs.value = parseInt(eggs.value) + parseInt(bank.value);
+
+		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
+		var piggyBonusCalc = Math.floor(userData.piggyBank*(piggyBonus/100));
+
+		eggs.value = parseInt(eggs.value) + userData.piggyBank + piggyBonusCalc;
 		bank.value = 0;
+		level.value++;
 		userUpdateEggs();
 	}
 
@@ -663,6 +695,7 @@
 		var result = updateEggs();
 		userData.eggs = result[0];
 		userData.piggyBank = result[1];
+		userData.piggyLevel = result[2];
 		calculate();
 		save();
 	}
@@ -670,13 +703,17 @@
 	function updateEggs() {
 		var eggs = document.querySelector("#goldeneggs");
 		var bank = document.querySelector("#piggybank");
+		var level = document.querySelector("#piggylevel");
 		var newEggs = parseInt(eggs.value) || 0;
 		var newBank = parseInt(bank.value) || 0;
+		var newLevel = parseInt(level.value) || 1;
 		newEggs = Math.max(newEggs, 0);
 		newBank = Math.max(newBank, 0);
+		newLevel = Math.max(newLevel, 1);
 		eggs.value = newEggs;
 		bank.value = newBank;
-		return [newEggs, newBank];
+		level.value = newLevel;
+		return [newEggs, newBank, newLevel];
 	}
 
 	function stripeTables() {
@@ -739,6 +776,7 @@
 	};
 
 	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs );
+	document.querySelector("#piggylevel").addEventListener("change", userUpdateEggs );
 	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs );
 
 	</script>
