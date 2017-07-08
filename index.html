@@ -227,7 +227,10 @@
 					</tr>
 				<% }); %>
 			</table>
-			<div class="innercontent" style="margin-top: 20px; margin-bottom: 20px;">
+			<div class="innercontent" style="margin-top: 20px;">
+				<div class="noselect inline right">Epic % Discount <input type="number" min="0" max="100" id="epicdiscount" tabindex="52"style="width: 38px"></div>
+			</div>
+			<div class="innercontent clear" style="margin-bottom: 20px;">
 				<div class="left">Desired Upgrade Cost: <b id="fut-upgrade-total"></b></div>
 				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-cost"></b></div>
 				<div class="right">Eggs Left to Obtain: <b id="fut-egg-remain"></b></div>
@@ -263,6 +266,7 @@
 		eggs: 0,
 		piggyLevel: 1,
 		piggyBank: 0,
+		epicDiscount: 0,
 		hideCompleted: false,
 		columns: {
 			desc: true,
@@ -524,11 +528,11 @@
 			// Futures
 			var increaseCost = 0;
 			for (i=userData.upgrades[key]; i<userData.upgrades[key]+userData.increase[key]; i++) {
-				increaseCost += upgrade.costs[i];
+				increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * (userData.epicDiscount/100));
 			}
 			totalDesiredUpgrade += increaseCost;
 			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost == 0 ? "&ndash;" : increaseCost.toLocaleString();
-			var nextCost = upgrade.costs[userData.upgrades[key]];
+			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * (userData.epicDiscount/100));
 			document.querySelector("#fut-next-"+key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
 
 			// Buy?
@@ -600,13 +604,14 @@
 		document.querySelector("#goldeneggs").value = userData.eggs;
 		document.querySelector("#piggylevel").value = userData.piggyLevel;
 		document.querySelector("#piggybank").value = userData.piggyBank;
+		document.querySelector("#epicdiscount").value = userData.epicDiscount;
 		calculate();
 	}
 
 	function buy(key) {
 		document.querySelector("#lvl-"+key).value++;
 		document.querySelector("#fut-inc-"+key).value--;
-		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]];
+		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.floor(upgrades[key].costs[userData.upgrades[key]] * (userData.epicDiscount/100));
 
 		userUpdateIncrease(key);
 		userUpdateLevel(key, true);
@@ -696,6 +701,7 @@
 		userData.eggs = result[0];
 		userData.piggyBank = result[1];
 		userData.piggyLevel = result[2];
+		userData.epicDiscount = result[3];
 		calculate();
 		save();
 	}
@@ -704,16 +710,20 @@
 		var eggs = document.querySelector("#goldeneggs");
 		var bank = document.querySelector("#piggybank");
 		var level = document.querySelector("#piggylevel");
+		var discount = document.querySelector("#epicdiscount");
 		var newEggs = parseInt(eggs.value) || 0;
 		var newBank = parseInt(bank.value) || 0;
 		var newLevel = parseInt(level.value) || 1;
+		var newDiscount = parseInt(discount.value) || 0;
 		newEggs = Math.max(newEggs, 0);
 		newBank = Math.max(newBank, 0);
 		newLevel = Math.max(newLevel, 1);
+		newDiscount = Math.min(Math.max(newDiscount, 0), 100);
 		eggs.value = newEggs;
 		bank.value = newBank;
 		level.value = newLevel;
-		return [newEggs, newBank, newLevel];
+		discount.value = newDiscount;
+		return [newEggs, newBank, newLevel, newDiscount];
 	}
 
 	function stripeTables() {
@@ -778,6 +788,7 @@
 	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs );
 	document.querySelector("#piggylevel").addEventListener("change", userUpdateEggs );
 	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs );
+	document.querySelector("#epicdiscount").addEventListener("change", userUpdateEggs );
 
 	</script>
 </body>
