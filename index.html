@@ -253,8 +253,9 @@
 			</div>
 		</div>
 
-		<h3>Current as of Egg, Inc. version 1.5.5</h3>
-		<h3><a target="_blank", href="https://www.reddit.com/r/EggsInc/comments/65e364/epic_research_costs_calculator/">Click here</a> for discussion, suggestions, and feedback!</h3>
+		<h3>Current as of Egg, Inc. version 1.7</h3>
+		<h3><a target="_blank", href="https://www.reddit.com/r/EggsInc/comments/87klhc/epic_research_costs_calculator_updated_for_17/">Click here</a> for discussion, suggestions, and feedback!</h3>
+		<h3>Join me on any contracts with 'royalphysique' if you like!</h3>
 		<h3><a target="_blank", href="https://github.com/SticklyMan/egginc-epic-research-calc/">It's on GitHub for some reason!</a></h3>
 	</script>
 
@@ -293,8 +294,11 @@
 			soulFood: 0,
 			prestigeBonus: 0,
 			droneRewards: 0,
+			epicComfyNests: 0,
 			transportationLobbyists: 0,
-			warpShift: 0
+			warpShift: 0,
+			prophecyBonus: 0,
+			holdToResearch: 0
 		},
 		increase: {
 			holdToHatch: 0,
@@ -314,8 +318,11 @@
 			soulFood: 0,
 			prestigeBonus: 0,
 			droneRewards: 0,
+			epicComfyNests: 0,
 			transportationLobbyists: 0,
-			warpShift: 0
+			warpShift: 0,
+			prophecyBonus: 0,
+			holdToResearch: 0
 		}
 	};
 	if (localStorage.userData === undefined) {
@@ -326,137 +333,158 @@
 	// Upgrade Data
 	var upgrades = {
 		holdToHatch: {
-			costs: [10, 34, 58, 82, 106, 130, 154, 178, 202, 226],
+			costs: [10, 36, 63, 90, 116, 143, 170, 196, 223, 250],
 			title: "Hold to Hatch",
 			desc: "Hold chicken button +2 chickens per second",
 			bonusDesc: "+{VAL}/SEC",
 			bonusVal: 2
 		},
 		epicHatchery: {
-			costs: [2, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 550, 600, 650, 700, 750, 800, 850, 900, 950],
+			costs: [2, 54, 107, 159, 212, 264, 317, 369, 422, 474, 527, 579, 632, 684, 737, 789, 842, 894, 947, 1000],
 			title: "Epic Hatchery",
 			desc: "Increase hatechery refill rate by 10%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 10
 		},
 		epicIntHatchery: {
-			costs: [25, 73, 122, 171, 220, 268, 317, 366, 415, 463, 512, 561, 610, 658, 707, 756, 805, 853, 902, 951],
+			costs: [25, 76, 127, 178, 230, 281, 332, 384, 435, 486, 538, 589, 640, 692, 743, 794, 846, 897, 948, 1000],
 			title: "Epic Int. Hatcheries",
 			desc: "Increase internal hatchery rate by 5%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 5
 		},
 		videoDoubler: {
-			costs: [25, 231, 437, 643, 850, 1056, 1262, 1468, 1675, 1881, 2087, 2293],
+			costs: [25, 250, 475, 700, 925, 1150, 1375, 1600, 1825, 2050, 2275, 2500],
 			title: "Video Doubler Time",
 			desc: "Increase video doubler time by 30 min.",
 			bonusDesc: "+{VAL} min.",
 			bonusVal: 30
 		},
 		epicClucking: {
-			costs: [50, 95, 140, 185, 230, 275, 320, 365, 410, 455],
+			costs: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
 			title: "Epic Clucking",
 			desc: "+0.1% egg value bonus for each running chicken",
 			bonusDesc: "+{VAL}% / chicken",
 			bonusVal: 0.1
 		},
 		epicMultiplier: {
-			costs: [10, 29, 49, 69, 89, 109, 129, 149, 168, 188, 208, 228, 248, 268, 288, 308, 327, 347, 367, 387, 407, 427, 447, 466, 486, 506, 526, 546, 566, 586, 606, 625, 645, 665, 685, 705, 725, 745, 764, 784, 804, 824, 844, 864, 884, 904, 923, 943, 963, 983, 1003, 1023, 1043, 1062, 1082, 1102, 1122, 1142, 1162, 1182, 1202, 1221, 1241, 1261, 1281, 1301, 1321, 1341, 1360, 1380, 1400, 1420, 1440, 1460, 1480],
+			costs: [10, 30, 50, 70, 90, 110, 130, 150, 171, 191, 211, 231, 251, 271, 291, 312, 332, 352, 372, 392, 412, 432, 452, 473, 493, 513, 533, 553, 573, 593, 614, 634, 654, 674, 694, 714, 734, 755, 775, 795, 815, 835, 855, 875, 895, 916, 936, 956, 976, 996, 1016, 1036, 1057, 1077, 1097, 1117, 1137, 1157, 1177, 1197, 1218, 1238, 1258, 1278, 1298, 1318, 1338, 1359, 1379, 1399, 1419, 1439, 1459, 1479, 1500],
 			title: "Epic Multiplier",
 			desc: "Increase max running chicken bonus by 0.2x!",
 			bonusDesc: "+{VAL}x MAX",
 			bonusVal: 0.2
 		},
 		cheaperContractors: {
-			costs: [20, 68, 116, 164, 212, 260, 308, 356, 404, 452],
+			costs: [20, 73, 126, 180, 233, 286, 340, 393, 446, 500],
 			title: "Cheaper Contractors",
 			desc: "Reduce hen house and silo build costs by 5%",
 			bonusDesc: "-{VAL}%",
 			bonusVal: 5
 		},
 		bustUnions: {
-			costs: [20, 68, 116, 164, 212, 260, 308, 356, 404, 452],
+			costs: [20, 73, 126, 180, 233, 286, 340, 393, 446, 500],
 			title: "Bust Unions",
 			desc: "Reduce vehicle hire costs by 5%",
 			bonusDesc: "-{VAL}%",
 			bonusVal: 5
 		},
 		labUpgrade: {
-			costs: [25, 47, 70, 92, 115, 137, 160, 182, 205, 227],
+			costs: [25, 50, 75, 100, 125, 150, 175, 200, 225, 250],
 			title: "Lab Upgrade",
 			desc: "Reduce research costs by 5%",
 			bonusDesc: "-{VAL}%",
 			bonusVal: 5
 		},
 		siloQuality: {
-			costs: [5, 11, 17, 23, 29, 35, 41, 47, 54, 60, 66, 72, 78, 84, 90, 96, 103, 109, 115, 121, 127, 133, 139, 145, 152, 158, 164, 170, 176, 182, 188, 194, 201, 207, 213, 219, 225, 231, 237, 243],
+			costs: [5, 11, 17, 23, 30, 36, 42, 48, 55, 61, 67, 74, 80, 86, 92, 99, 105, 111, 118, 124, 130, 136, 143, 149, 155, 162, 168, 174, 180, 187, 193, 199, 206, 212, 218, 224, 231, 237, 243, 250],
 			title: "Silo Quality",
 			desc: "Increase silo quality by 2%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 2
 		},
 		siloCapacity: {
-			costs: [100, 130, 160, 190, 220, 250, 280, 310, 340, 370],
+			costs: [100, 133, 166, 200, 233, 266, 300, 333, 366, 400],
 			title: "Silo Capacity",
 			desc: "Increase away time per silo by 6 min",
 			bonusDesc: "+{VAL} min.",
 			bonusVal: 6
 		},
 		internalHatcherySharing: {
-			costs: [250, 475, 700, 925, 1150, 1375, 1600, 1825, 2050, 2275],
+			costs: [250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500],
 			title: "Internal Hatchery Sharing",
 			desc: "Full habs' internal hatcheries send +10% chicks to other habs",
 			bonusDesc: "{VAL}% shared",
 			bonusVal: 10
 		},
 		internalHatcheryCalm: {
-			costs: [10, 109, 209, 308, 408, 507, 607, 706, 806, 905, 1005, 1104, 1204, 1303, 1403, 1502, 1602, 1701, 1801, 1900],
+			costs: [10, 114, 219, 324, 428, 533, 638, 743, 847, 952, 1057, 1162, 1266, 1371, 1476, 1581, 1685, 1790, 1895, 2000],
 			title: "Internal Hatchery Calm",
 			desc: "Increase internal hatchery rate by 10% while away",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 10
 		},
 		accountingTricks: {
-			costs: [25, 223, 422, 621, 820, 1018, 1217, 1416, 1615, 1813, 2012, 2211, 2410, 2608, 2807, 3006, 3205, 3403, 3602, 3801],
+			costs: [25, 234, 443, 652, 861, 1071, 1280, 1489, 1698, 1907, 2117, 2326, 2535, 2744, 2953, 3163, 3372, 3581, 3790, 4000],
 			title: "Accounting Tricks",
 			desc: "Increase farm valuation by 5%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 5
 		},
 		soulFood: {
-			costs: [100, 127, 155, 183, 211, 239, 267, 295, 322, 350, 378, 406, 434, 462, 490, 517, 545, 573, 601, 629, 657, 685, 712, 740, 768, 796, 824, 852, 880, 907, 935, 963, 991, 1019, 1047, 1075, 1102, 1130, 1158, 1186, 1214, 1242, 1270, 1297, 1325, 1353, 1381, 1409, 1437, 1465, 1492, 1520, 1548, 1576, 1604, 1632, 1660, 1687, 1715, 1743, 1771, 1799, 1827, 1855, 1882, 1910, 1938, 1966, 1994, 2022, 2050, 2077, 2105, 2133, 2161, 2189, 2217, 2245, 2272, 2300, 2328, 2356, 2384, 2412, 2440, 2467, 2495, 2523, 2551, 2579, 2607, 2635, 2662, 2690, 2718, 2746, 2774, 2802, 2830, 2857, 2885, 2913, 2941, 2969, 2997, 3025, 3052, 3080, 3108, 3136, 3164, 3192, 3220, 3247, 3275, 3303, 3331, 3359, 3387, 3415, 3442, 3470, 3498, 3526, 3554, 3582, 3610, 3637, 3665, 3693, 3721, 3749, 3777, 3805, 3832, 3860, 3888, 3916, 3944, 3972],
+			costs: [100, 128, 156, 184, 212, 240, 268, 296, 324, 352, 380, 408, 436, 464, 492, 520, 548, 576, 605, 633, 661, 689, 717, 745, 773, 801, 829, 857, 885, 913, 941, 969, 997, 1025, 1053, 1082, 1110, 1138, 1166, 1194, 1222, 1250, 1278, 1306, 1334, 1362, 1390, 1418, 1446, 1474, 1502, 1530, 1558, 1587, 1615, 1643, 1671, 1699, 1727, 1755, 1783, 1811, 1839, 1867, 1895, 1923, 1951, 1979, 2007, 2035, 2064, 2092, 2120, 2148, 2176, 2204, 2232, 2260, 2288, 2316, 2344, 2372, 2400, 2428, 2456, 2484, 2512, 2541, 2569, 2597, 2625, 2653, 2681, 2709, 2737, 2765, 2793, 2821, 2849, 2877, 2905, 2933, 2961, 2989, 3017, 3046, 3074, 3102, 3130, 3158, 3186, 3214, 3242, 3270, 3298, 3326, 3354, 3382, 3410, 3438, 3466, 3494, 3523, 3551, 3579, 3607, 3635, 3663, 3691, 3719, 3747, 3775, 3803, 3831, 3859, 3887, 3915, 3943, 3971, 4000],
 			title: "Soul Food",
 			desc: "Increase bonus per soul egg by +1%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 1
 		},
 		prestigeBonus: {
-			costs: [4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800, 5900],
+			costs: [4000, 4105, 4210, 4315, 4421, 4526, 4631, 4736, 4842, 4947, 5052, 5157, 5263, 5368, 5473, 5578, 5684, 5789, 5894, 6000],
 			title: "Prestige Bonus",
 			desc: "Earn +10% soul eggs when you prestige",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 10
 		},
 		droneRewards: {
-			costs: [100, 345, 590, 835, 1080, 1325, 1570, 1815, 2060, 2305, 2550, 2795, 3040, 3285, 3530, 3775, 4020, 4265, 4510, 4755],
+			costs: [100, 357, 615, 873, 1131, 1389, 1647, 1905, 2163, 2421, 2678, 2936, 3194, 3452, 3710, 3968, 4226, 4484, 4742, 5000],
 			title: "Drone Rewards",
 			desc: "Increase your chances for bigger drone rewards by 10%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 10
 		},
+		epicComfyNests: {
+			costs: [250, 2868, 5486, 8105, 10723, 13342, 15960, 18578, 21197, 23815, 26434, 29052, 31671, 34289, 36907, 39526, 42144, 44763, 47381, 50000],
+			title: "Epic Comfy Nests",
+			desc: "Increase egg laying rate by 5%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 5
+		},
 		transportationLobbyists: {
-			costs: [250, 362, 475, 587, 700, 812, 925, 1037, 1150, 1262, 1375, 1487, 1600, 1712, 1825, 1937, 2050, 2162, 2275, 2387],
+			costs: [250, 379, 508, 637, 767, 896, 1025, 1155, 1284, 1413, 1543, 1672, 1801, 1931, 2060, 2189, 2318, 2448, 2577, 2706, 2836, 2965, 3094, 3224, 3353, 3482, 3612, 3741, 3870, 4000],
 			title: "Transportation Lobbyists",
 			desc: "Increase vehicle capacity by 5%",
 			bonusDesc: "+{VAL}%",
 			bonusVal: 5
 		},
 		warpShift: {
-			costs: [250, 546, 843, 1140, 1437, 1734, 2031, 2328, 2625, 2921, 3218, 3515, 3812, 4109, 4406, 4703],
+			costs: [250, 566, 883, 1200, 1516, 1833, 2150, 2466, 2783, 3100, 3416, 3733, 4050, 4366, 4683, 5000],
 			title: "Warp Shift",
 			desc: "Increases long warp time by 1 hour.",
 			bonusDesc: "+{VAL} hrs",
 			bonusVal: 1
+		},
+		prophecyBonus: {
+			costs: [20000, 27500, 35000, 42500, 50000],
+			title: "Prophecy Bonus",
+			desc: "Increase bonus per egg of prophecy by +1% (compounding)",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 1
+		},
+		holdToResearch: {
+			costs: [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000],
+			title: "Hold to Research",
+			desc: "Increase repetition rate when holding down research button by 25%",
+			bonusDesc: "+{VAL}%",
+			bonusVal: 25
 		}
 	};
 
