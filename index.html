@@ -607,7 +607,7 @@
 
 		// Piggy Bank calculations
 		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
-		var piggyBonusCalc = Math.floor(userData.piggyBank*(piggyBonus/100));
+		var piggyBonusCalc = Math.ceil(userData.piggyBank*(piggyBonus/100));
 		var piggyCrackTotal = userData.piggyBank + piggyBonusCalc;
 		document.querySelector("#piggybonus").innerHTML = piggyBonus;
 		document.querySelector("#piggybonuscalc").innerHTML = piggyBonusCalc;
@@ -673,7 +673,7 @@
 		var bank = document.querySelector("#piggybank");
 
 		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
-		var piggyBonusCalc = Math.floor(userData.piggyBank*(piggyBonus/100));
+		var piggyBonusCalc = Math.ceil(userData.piggyBank*(piggyBonus/100));
 
 		eggs.value = parseInt(eggs.value) + userData.piggyBank + piggyBonusCalc;
 		bank.value = 0;
