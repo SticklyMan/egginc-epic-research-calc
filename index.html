@@ -248,16 +248,23 @@
 						<td><button id="fut-buy-<%- key %>" onclick="buy('<%- key %>')" tabindex="<%- 300+tabindex %>">Buy!</button></td>
 					</tr>
 				<% }); %>
+				<tr class="bold-text">
+					<td class="noborder"></td>
+					<td id="total-levels-2"><%- totals.levels %></td>
+					<td id="fut-upgrade-desired-levels"></td>
+					<td><span id="fut-upgrade-total"></span></td>
+					<td class="noborder"></td>
+					<td class="noborder"></td>
+				</tr>
 			</table>
 			<div class="innercontent" style="margin-top: 20px;">
 				<div class="noselect inline right">Epic % Discount (event) <input type="number" min="0" max="100" id="epicdiscount" tabindex="52"style="width: 38px"></div>
 			</div>
 			<div class="innercontent clear" style="margin-bottom: 20px;">
-				<div class="left">Desired Upgrade Cost: <b id="fut-upgrade-total"></b></div>
+				<div class="left">Eggs Left to get: <b id="fut-upgrade-remain"></b></div>
 				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-cost"></b></div>
 				<div class="right">Eggs Left to Obtain: <b id="fut-egg-remain"></b></div>
 				<div class="clear"></div>
-				<div class="left">Eggs Left to get: <b id="fut-upgrade-remain"></b></div>
 				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-piggy-cost"></b></div>
 				<div class="right">Eggs Left to Obtain (incl. Piggy Bank): <b id="fut-egg-remain-piggy"></b></div>
 			</div>
@@ -552,6 +559,7 @@
 	function calculate() {
 		var totalSpentLevels = 0;
 		var totalSpent = 0;
+		var totalDesiredLevels = 0;
 		var totalDesiredUpgrade = 0;
 		_.each(upgrades, function(upgrade, key) {
 			// Statistics
@@ -572,6 +580,7 @@
 			for (i=userData.upgrades[key]; i<userData.upgrades[key]+desiredLevels; i++) {
 				increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
 			}
+			totalDesiredLevels += userData.increase[key];
 			totalDesiredUpgrade += increaseCost;
 			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost == 0 ? "&ndash;" : increaseCost.toLocaleString();
 			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
@@ -592,11 +601,14 @@
 				upgradeRow.classList.remove("hide");
 			}
 		});
-		document.querySelector("#total-levels").innerHTML = totalSpentLevels + " / " + totals.levels;
+		var totalLevelString = totalSpentLevels + " / " + totals.levels
+		document.querySelector("#total-levels").innerHTML = totalLevelString;
+		document.querySelector("#total-levels-2").innerHTML = totalLevelString;
 		document.querySelector("#total-spent").innerHTML = totalSpent.toLocaleString();
 		document.querySelector("#total-remaining").innerHTML = (totals.cost - totalSpent).toLocaleString();
 		document.querySelector("#fut-upgrade-total").innerHTML = totalDesiredUpgrade.toLocaleString();
 		document.querySelector("#fut-upgrade-remain").innerHTML = Math.max((totalDesiredUpgrade - userData.eggs), 0).toLocaleString();
+		document.querySelector("#fut-upgrade-desired-levels").innerHTML = totalDesiredLevels;
 
 		// Piggy Bank calculations
 		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
