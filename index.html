@@ -754,33 +754,32 @@
 	}
 
 	function userUpdateEggs() {
-		var result = updateEggs();
-		userData.eggs = result[0];
-		userData.piggyBank = result[1];
-		userData.piggyLevel = result[2];
-		userData.epicDiscount = result[3];
+		var eggs = document.querySelector("#goldeneggs");
+		var newEggs = parseInt(eggs.value) || 0;
+		newEggs = Math.max(newEggs, 0);
+		eggs.value = newEggs;
+		userData.eggs = newEggs;
+
+		var bank = document.querySelector("#piggybank");
+		var newBank = parseInt(bank.value) || 0;
+		newBank = Math.max(newBank, 0);
+		bank.value = newBank;
+		userData.piggyBank = newBank;
+
+		var level = document.querySelector("#piggylevel");
+		var newLevel = parseInt(level.value) || 1;
+		newLevel = Math.max(newLevel, 1);
+		level.value = newLevel;
+		userData.piggyLevel = newLevel;
+
+		var discount = document.querySelector("#epicdiscount");
+		var newDiscount = parseInt(discount.value) || 0;
+		newDiscount = Math.min(Math.max(newDiscount, 0), 100);
+		discount.value = newDiscount;
+		userData.epicDiscount = newDiscount;
+
 		calculate();
 		save();
-	}
-
-	function updateEggs() {
-		var eggs = document.querySelector("#goldeneggs");
-		var bank = document.querySelector("#piggybank");
-		var level = document.querySelector("#piggylevel");
-		var discount = document.querySelector("#epicdiscount");
-		var newEggs = parseInt(eggs.value) || 0;
-		var newBank = parseInt(bank.value) || 0;
-		var newLevel = parseInt(level.value) || 1;
-		var newDiscount = parseInt(discount.value) || 0;
-		newEggs = Math.max(newEggs, 0);
-		newBank = Math.max(newBank, 0);
-		newLevel = Math.max(newLevel, 1);
-		newDiscount = Math.min(Math.max(newDiscount, 0), 100);
-		eggs.value = newEggs;
-		bank.value = newBank;
-		level.value = newLevel;
-		discount.value = newDiscount;
-		return [newEggs, newBank, newLevel, newDiscount];
 	}
 
 	function stripeTables() {
