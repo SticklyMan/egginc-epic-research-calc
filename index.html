@@ -567,12 +567,14 @@
 
 			// Futures
 			var increaseCost = 0;
-			for (i=userData.upgrades[key]; i<userData.upgrades[key]+userData.increase[key]; i++) {
-				increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * (userData.epicDiscount/100));
+			var desiredLevels = userData.increase[key];
+			var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+			for (i=userData.upgrades[key]; i<userData.upgrades[key]+desiredLevels; i++) {
+				increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
 			}
 			totalDesiredUpgrade += increaseCost;
 			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost == 0 ? "&ndash;" : increaseCost.toLocaleString();
-			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * (userData.epicDiscount/100));
+			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
 			document.querySelector("#fut-next-"+key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
 
 			// Buy?
@@ -651,7 +653,8 @@
 	function buy(key) {
 		document.querySelector("#lvl-"+key).value++;
 		document.querySelector("#fut-inc-"+key).value--;
-		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.floor(upgrades[key].costs[userData.upgrades[key]] * (userData.epicDiscount/100));
+		var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+		document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.floor(upgrades[key].costs[userData.upgrades[key]] * discountMultiplier);
 
 		userUpdateIncrease(key);
 		userUpdateLevel(key, true);
