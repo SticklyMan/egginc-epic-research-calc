@@ -209,12 +209,14 @@
 					<td class="showtotal"><%- totals.cost.toLocaleString() %></td>
 				</tr>
 			</table>
-			<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
-			<label class="noselect"><input type="checkbox" checked="true" id="chkbonus" tabindex="41"> Show Bonus</label>
-			<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
-			<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
-			<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
-			<label class="noselect"><input type="checkbox" checked="false" id="sethidecompleted" tabindex="45"> Hide Completed</label>
+			<div style="margin-top: 5px;">
+				<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
+				<label class="noselect"><input type="checkbox" checked="true" id="chkbonus" tabindex="41"> Show Bonus</label>
+				<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
+				<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
+				<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
+				<label class="noselect"><input type="checkbox" checked="false" id="sethidecompleted" tabindex="45"> Hide Completed</label>
+			</div>
 		</div>
 
 		<div class="modal">
@@ -224,8 +226,8 @@
 				<div class="noselect inline left padleft padbottom">Piggy Level <input type="number" min="1" id="piggylevel" tabindex="51"style="width: 38px"> +<span id="piggybonus">0</span>%</div>
 				<div class="noselect inline left" style="margin-left: 4px">(+<span id="piggybonuscalc">0</span>)</div>
 
-				<button class="right" id="crackpiggy" onclick="crackThePiggy()" tabindex="54">Crack Open (+<span id="piggycracktotal">0</span>)</button>
-				<div class="noselect inline right padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="53"></div>
+				<button class="right" id="crackpiggy" onclick="crackThePiggy()" tabindex="53">Crack Open (+<span id="piggycracktotal">0</span>)</button>
+				<div class="noselect inline right padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
 			</div>
 			<table id="future-table">
 				<tr>
@@ -273,11 +275,11 @@
 		<div class="modal">
 			<h2>Import/Export</h2>
 			<div class="innercontent">
-				<textarea id="exportfield" rows="8" tabindex="400"></textarea>
+				<textarea id="exportfield" rows="8" tabindex="500"></textarea>
 				<div class="buttonrow">
-					<button onclick="loadBase64()" class="left" tabindex="401">Load from Textfield</button>
-					<button onclick="exportBase64()" class="left" tabindex="402">Export to Textfield</button>
-					<button onclick="reset()" class="right" tabindex="403">Clear All Data</button>
+					<button onclick="loadBase64()" class="left" tabindex="501">Load from Textfield</button>
+					<button onclick="exportBase64()" class="left" tabindex="502">Export to Textfield</button>
+					<button onclick="reset()" class="right" tabindex="503">Clear All Data</button>
 				</div>
 			</div>
 		</div>
