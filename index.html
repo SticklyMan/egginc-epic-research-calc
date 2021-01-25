@@ -253,22 +253,32 @@
 				<tr class="bold-text">
 					<td class="noborder"></td>
 					<td id="total-levels-2"><%- totals.levels %></td>
-					<td id="fut-upgrade-desired-levels"></td>
-					<td><span id="fut-upgrade-total"></span></td>
+					<td id="total-desired-levels"></td>
+					<td><span id="total-desired-cost"></span></td>
 					<td class="noborder"></td>
 					<td class="noborder"></td>
 				</tr>
 			</table>
-			<div class="innercontent" style="margin-top: 20px;">
-				<div class="noselect inline right">Epic % Discount (event) <input type="number" min="0" max="100" id="epicdiscount" tabindex="52"style="width: 38px"></div>
+			<div class="innercontent" style="margin-top: 5px;">
+				<div class="noselect inline right">
+					<select class="right" id="optcalctrucktype" name="optcalctrucktype" tabindex="402">
+						<option id="opt-truck" value="0" selected>Truckload (10,000 @ $19.99)</option>
+						<option id="opt-pallet" value="1">Pallet (4,400 @ $9.99)</option>
+						<option id="opt-crate" value="2">Big Crate (2,000 @ $4.99)</option>
+					</select>
+					<label class="noselect right padleft" style="margin-right: 5px;"> Cost Using</label>
+				</div>
+				<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcpiggy" tabindex="401"> Include a Piggy Crack</label>
+				<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcdesired" tabindex="400"> Calc Desired Only</label>
 			</div>
-			<div class="innercontent clear" style="margin-bottom: 20px;">
-				<div class="left">Eggs Left to get: <b id="fut-upgrade-remain"></b></div>
-				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-cost"></b></div>
-				<div class="right">Eggs Left to Obtain: <b id="fut-egg-remain"></b></div>
-				<div class="clear"></div>
-				<div class="right padleft">Cost (Truckloads): <b id="fut-egg-remain-piggy-cost"></b></div>
-				<div class="right">Eggs Left to Obtain (incl. Piggy Bank): <b id="fut-egg-remain-piggy"></b></div>
+			<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
+				<div class="noselect inline right padleft">Epic % Discount <input type="number" min="0" max="100" id="epicdiscount" tabindex="404" style="width: 38px"></div>
+				<div class="noselect inline right padleft">Piggy % Discount ($<span id="piggycost">4.99</span>) <input type="number" min="0" max="100" id="piggydiscount" tabindex="403" style="width: 38px"></div>
+				<b class="right">Events:</b>
+			</div>
+			<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
+				<div class="right padleft">Remaining Golden Eggs: <b id="fut-egg-remain"></b></div>
+				<div class="right">Remaining Cost: <b id="fut-egg-remain-cost"></b></div>
 			</div>
 		</div>
 
@@ -297,6 +307,10 @@
 		eggs: 0,
 		piggyLevel: 1,
 		piggyBank: 0,
+		piggyDiscount: 0,
+		epicCalcOnlyDesired: false,
+		epicCalcIncludePiggy: false,
+		epicCalcTruckType: 0, // 0-Truckload, 1-Pallet, 2-Big Crate
 		epicDiscount: 0,
 		hideCompleted: false,
 		columns: {
@@ -562,7 +576,7 @@
 		var totalSpentLevels = 0;
 		var totalSpent = 0;
 		var totalDesiredLevels = 0;
-		var totalDesiredUpgrade = 0;
+		var totalDesiredCost = 0;
 		_.each(upgrades, function(upgrade, key) {
 			// Statistics
 			var spent = 0;
@@ -583,7 +597,7 @@
 				increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
 			}
 			totalDesiredLevels += userData.increase[key];
-			totalDesiredUpgrade += increaseCost;
+			totalDesiredCost += increaseCost;
 			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost === 0 ? "&ndash;" : increaseCost.toLocaleString();
 			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
 			document.querySelector("#fut-next-"+key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
@@ -608,27 +622,75 @@
 		document.querySelector("#total-levels-2").innerHTML = totalLevelString;
 		document.querySelector("#total-spent").innerHTML = totalSpent.toLocaleString();
 		document.querySelector("#total-remaining").innerHTML = (totals.cost - totalSpent).toLocaleString();
-		document.querySelector("#fut-upgrade-total").innerHTML = totalDesiredUpgrade.toLocaleString();
-		document.querySelector("#fut-upgrade-remain").innerHTML = Math.max((totalDesiredUpgrade - userData.eggs), 0).toLocaleString();
-		document.querySelector("#fut-upgrade-desired-levels").innerHTML = totalDesiredLevels;
+		document.querySelector("#total-desired-cost").innerHTML = totalDesiredCost.toLocaleString();
+		document.querySelector("#total-desired-levels").innerHTML = totalDesiredLevels;
 
 		// Piggy Bank calculations
 		var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
 		var piggyBonusCalc = Math.ceil(userData.piggyBank*(piggyBonus/100));
 		var piggyCrackTotal = userData.piggyBank + piggyBonusCalc;
 		document.querySelector("#piggybonus").innerHTML = piggyBonus;
-		document.querySelector("#piggybonuscalc").innerHTML = piggyBonusCalc;
-		document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal;
+		document.querySelector("#piggybonuscalc").innerHTML = piggyBonusCalc.toLocaleString();
+		document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal.toLocaleString();
 
 		document.querySelector("#crackpiggy").disabled = userData.piggyBank < 300;
 
+		// Update truckload options based on piggy level
+		var truckloadQty = (10000+(userData.piggyLevel-1)*2500);
+		document.querySelector("#opt-truck").innerHTML = "Truckload ("+truckloadQty.toLocaleString()+" @ $19.99)";
+		var palletQty = (4400+(userData.piggyLevel-1)*1100);
+		document.querySelector("#opt-pallet").innerHTML = "Pallet ("+palletQty.toLocaleString()+" @ $9.99)";
+		var crateQty = (2000+(userData.piggyLevel-1)*500);
+		document.querySelector("#opt-crate").innerHTML = "Big Crate ("+crateQty.toLocaleString()+" @ $4.99)";
+
 		// Calculate remaining eggs
-		var remain = Math.max((totals.cost - totalSpent - userData.eggs), 0);
-		var remainPlusPiggy = Math.max((remain-piggyCrackTotal), 0);
-		document.querySelector("#fut-egg-remain").innerHTML = remain.toLocaleString();
-		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(Math.ceil(remain/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
-		document.querySelector("#fut-egg-remain-piggy").innerHTML = remainPlusPiggy.toLocaleString();
-		document.querySelector("#fut-egg-remain-piggy-cost").innerHTML = "$"+(Math.ceil(remainPlusPiggy/6750)*19.99).toLocaleString(undefined, { minimumFractionDigits: 2 });
+		var remaining = 0;
+		var usedPiggyCrack = false;
+		if (userData.epicCalcOnlyDesired) {
+			remaining = totalDesiredCost;
+		}
+		else {
+			// Recalculate a full total including discount
+			_.each(upgrades, function(upgrade, key) {
+				var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+				for (i=userData.upgrades[key]; i<upgrades[key].costs.length; i++) {
+					remaining += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
+				}
+			});
+		}
+		remaining -= userData.eggs;
+		if (userData.epicCalcIncludePiggy && remaining > 0 && piggyCrackTotal > 0) {
+			remaining -= piggyCrackTotal;
+			usedPiggyCrack = true;
+		}
+		remaining = Math.max(remaining, 0);
+
+		document.querySelector("#fut-egg-remain").innerHTML = remaining.toLocaleString();
+
+		// Calculate purchase cost
+		var piggyCost = 4.99 - (4.99 * userData.piggyDiscount/100).toFixed(2);
+		document.querySelector("#piggycost").innerHTML = piggyCost.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+		var purchaseQty = 1;
+		var purchasePrice = 0;
+		if (userData.epicCalcTruckType === 0) {
+			purchaseQty = truckloadQty;
+			purchasePrice = 19.99;
+		}
+		else if (userData.epicCalcTruckType === 1) {
+			purchaseQty = palletQty;
+			purchasePrice = 9.99;
+		}
+		else if (userData.epicCalcTruckType === 2) {
+			purchaseQty = crateQty;
+			purchasePrice = 4.99;
+		}
+		var remainingCost = Math.ceil(remaining/purchaseQty)*purchasePrice;
+		if (usedPiggyCrack) {
+			remainingCost += piggyCost;
+		}
+
+		document.querySelector("#fut-egg-remain-cost").innerHTML = "$"+(remainingCost.toLocaleString(undefined, { minimumFractionDigits: 2 }));
 
 		// Re-stripe tables
 		stripeTables();
@@ -660,6 +722,10 @@
 		document.querySelector("#goldeneggs").value = userData.eggs;
 		document.querySelector("#piggylevel").value = userData.piggyLevel;
 		document.querySelector("#piggybank").value = userData.piggyBank;
+		document.querySelector("#piggydiscount").value = userData.piggyDiscount;
+		document.querySelector("#chkcalcdesired").checked = userData.epicCalcOnlyDesired;
+		document.querySelector("#chkcalcpiggy").checked = userData.epicCalcIncludePiggy;
+		document.querySelector("#optcalctrucktype").value = userData.epicCalcTruckType;
 		document.querySelector("#epicdiscount").value = userData.epicDiscount;
 		calculate();
 	}
@@ -772,6 +838,28 @@
 		level.value = newLevel;
 		userData.piggyLevel = newLevel;
 
+		var piggyDiscount = document.querySelector("#piggydiscount");
+		var newpiggyDiscount = parseInt(piggyDiscount.value) || 0;
+		newpiggyDiscount = Math.min(Math.max(newpiggyDiscount, 0), 100);
+		piggyDiscount.value = newpiggyDiscount;
+		userData.piggyDiscount = newpiggyDiscount;
+
+		var calcDesired = document.querySelector("#chkcalcdesired");
+		var newCalcDesired = calcDesired.checked || false;
+		calcDesired.checked = newCalcDesired;
+		userData.epicCalcOnlyDesired = newCalcDesired;
+
+		var calcPiggy = document.querySelector("#chkcalcpiggy");
+		var newCalcPiggy = calcPiggy.checked || false;
+		calcPiggy.checked = newCalcPiggy;
+		userData.epicCalcIncludePiggy = newCalcPiggy;
+
+		var calcTruck = document.querySelector("#optcalctrucktype");
+		var newTruck = parseInt(calcTruck.value) || 0;
+		newTruck = Math.min(Math.max(newTruck, 0), 2);
+		calcTruck.value = newTruck;
+		userData.epicCalcTruckType = newTruck;
+
 		var discount = document.querySelector("#epicdiscount");
 		var newDiscount = parseInt(discount.value) || 0;
 		newDiscount = Math.min(Math.max(newDiscount, 0), 100);
@@ -841,10 +929,14 @@
 		exportfield.select();
 	};
 
-	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs );
-	document.querySelector("#piggylevel").addEventListener("change", userUpdateEggs );
-	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs );
-	document.querySelector("#epicdiscount").addEventListener("change", userUpdateEggs );
+	document.querySelector("#goldeneggs").addEventListener("change", userUpdateEggs);
+	document.querySelector("#piggylevel").addEventListener("change", userUpdateEggs);
+	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs);
+	document.querySelector("#piggydiscount").addEventListener("change", userUpdateEggs);
+	document.querySelector("#chkcalcdesired").addEventListener("change", userUpdateEggs);
+	document.querySelector("#chkcalcpiggy").addEventListener("change", userUpdateEggs);
+	document.querySelector("#optcalctrucktype").addEventListener("change", userUpdateEggs);
+	document.querySelector("#epicdiscount").addEventListener("change", userUpdateEggs);
 
 	</script>
 </body>
