@@ -584,12 +584,12 @@
 			}
 			totalDesiredLevels += userData.increase[key];
 			totalDesiredUpgrade += increaseCost;
-			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost == 0 ? "&ndash;" : increaseCost.toLocaleString();
+			document.querySelector("#fut-cost-"+key).innerHTML = increaseCost === 0 ? "&ndash;" : increaseCost.toLocaleString();
 			var nextCost = upgrade.costs[userData.upgrades[key]] - Math.floor(upgrade.costs[userData.upgrades[key]] * discountMultiplier);
 			document.querySelector("#fut-next-"+key).innerHTML = nextCost ? nextCost.toLocaleString() : "&ndash;";
 
 			// Buy?
-			document.querySelector("#fut-buy-"+key).disabled = upgrade.costs.length == userData.upgrades[key] || userData.eggs < nextCost;
+			document.querySelector("#fut-buy-"+key).disabled = upgrade.costs.length === userData.upgrades[key] || userData.eggs < nextCost;
 
 			// Visiblity if complete
 			var upgradeRow = document.querySelector("#upgradeRow-"+key);
@@ -603,7 +603,7 @@
 				upgradeRow.classList.remove("hide");
 			}
 		});
-		var totalLevelString = totalSpentLevels + " / " + totals.levels
+		var totalLevelString = totalSpentLevels + " / " + totals.levels;
 		document.querySelector("#total-levels").innerHTML = totalLevelString;
 		document.querySelector("#total-levels-2").innerHTML = totalLevelString;
 		document.querySelector("#total-spent").innerHTML = totalSpent.toLocaleString();
@@ -636,12 +636,12 @@
 
 	function getPiggyBankBonus(level) {
 		if (level === 1) {
-			return 2
+			return 2;
 		}
 		if (level === 2) {
-			return 25
+			return 25;
 		}
-		return 10*(level+1)
+		return 10*(level+1);
 	}
 
 	function populateInputs() {
@@ -789,7 +789,7 @@
 
 	function stripeRows(rows) {
 		for (var i=0; i<rows.length; i++) {
-			if (i%2==0) {
+			if (i%2===0) {
 				rows[i].classList.add('odd');
 			}
 			else {
