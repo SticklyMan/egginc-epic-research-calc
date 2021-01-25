@@ -1,0 +1,156 @@
+@font-face {
+	font-family: Always Together;
+	src: url("Always Together.otf");
+}
+#content {
+	max-width: 860px;
+	margin: 0 auto;
+}
+body {
+	font-family: Always Together;
+	background-color: rgb(191, 191, 191);
+	cursor: default;
+}
+.modal {
+	background-color: white;
+	border-radius: 25px;
+	padding-bottom: 15px;
+	margin-bottom: 25px;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+.clear {
+	clear: both;
+}
+input, select, textarea, button {
+	font-family: inherit;
+}
+h1 {
+	text-align: center;
+	font-weight: lighter;
+	color: black;
+}
+h2 {
+	text-align: center;
+	font-weight: lighter;
+	color: white;
+	margin: 0 0 15px 0;
+	padding: 5px;
+	border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
+	background-color: rgb(39, 110, 198);
+}
+h3 {
+	text-align: center;
+	font-weight: lighter;
+	color: black;
+	margin: 0;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	font-size: 18px;
+}
+td, th {
+	padding: 5px;
+}
+.odd td, th {
+	background-color: #e5e5e5;
+}
+.noborder {
+	border: none;
+}
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.inline {
+	display: inline-block;
+}
+table input[type='number'] {
+	width: 40px;
+}
+input[type='checkbox'] {
+	margin-left: 25px;
+}
+
+.innercontent {
+	padding: 0 15px 0 15px;
+}
+.innercontent textarea {
+	font-family: monospace;
+	font-size: 11px;
+	width: 100%;
+	margin-bottom: 2px;
+}
+.buttonrow {
+	height: 40px;
+}
+.buttonrow button {
+	font-size: 18px;
+}
+
+.padright {
+	margin-right: 25px;
+}
+.padleft {
+	margin-left: 25px;
+}
+.padbottom {
+	margin-bottom: 14px;
+}
+
+.bold-text {
+	font-weight: bold;
+}
+
+.showdesc { display: table-cell; }
+.showbonus { display: table-cell; }
+.showspent { display: table-cell; }
+.showremaining { display: table-cell; }
+.showtotal { display: table-cell; }
+
+tr.hide { display: none; }
+.showdesc.hide { display: none; }
+.showbonus.hide { display: none; }
+.showspent.hide { display: none; }
+.showremaining.hide { display: none; }
+.showtotal.hide { display: none; }
+
+#exportfield {
+	resize: vertical;
+}
+
+button {
+	cursor: pointer;
+	font-size: 16px;
+	color: white;
+	background-color: #19AD01;
+	border-radius: 5px;
+	padding: 2px 15px;
+	margin: 0px 3px;
+	border: 0;
+}
+
+button:active {
+	opacity: 0.6;
+}
+
+button[disabled] {
+	background-color: #7F7F7F;
+}
+
+@-moz-document url-prefix() {
+	button {
+		margin-top:-1px;
+	}
+}
