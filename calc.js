@@ -37,7 +37,10 @@ var initialUserData = {
 		transportationLobbyists: 0,
 		prophecyBonus: 0,
 		holdToResearch: 0,
-		hyperloopStation: 0
+		ftlDrive: 0,
+		zeroG: 0,
+		hyperloopStation: 0,
+		fuelTank: 0,
 	},
 	increase: {
 		holdToHatch: 0,
@@ -60,7 +63,10 @@ var initialUserData = {
 		transportationLobbyists: 0,
 		prophecyBonus: 0,
 		holdToResearch: 0,
-		hyperloopStation: 0
+		ftlDrive: 0,
+		zeroG: 0,
+		hyperloopStation: 0,
+		fuelTank: 0,
 	}
 };
 
@@ -211,10 +217,31 @@ var upgrades = {
 		bonusDesc: "+{VAL}%",
 		bonusVal: 25
 	},
+	ftlDrive: {
+		costs: [5000, 6875, 8750, 10625, 12500, 14375, 16250, 18125, 20000, 21875, 23750, 25625, 27500, 29375, 31250, 33125, 35000, 36875, 38750, 40625, 42500, 44375, 46250, 48125, 50000],
+		title: "FTL Drive Upgrades",
+		desc: "Reduce Artifact mission time of FTL ships by 1%",
+		bonusDesc: "+{VAL}%",
+		bonusVal: 1
+	},
+	zeroG: {
+		costs: [50000, 155555, 261111, 366666, 472222, 577777, 683333, 788888, 894444, 1000000],
+		title: "Zero-G Quantum Containment",
+		desc: "Increase Artifact mission capacity by 5%",
+		bonusDesc: "+{VAL}%",
+		bonusVal: 5
+	},
 	hyperloopStation: {
 		costs: [50000],
 		title: "Hyperloop Train",
 		desc: "Purchasing Hyperloop trains requires you to first construct a hyperloop station",
+		bonusDesc: "✓",
+		bonusVal: 0
+	},
+	fuelTank: {
+		costs: [50000, 250000, 1000000],
+		title: "Fuel Tank",
+		desc: "Increases the capacity of your fuel tank",
 		bonusDesc: "✓",
 		bonusVal: 0
 	}
