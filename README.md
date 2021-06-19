@@ -16,3 +16,6 @@ http://www.dafont.com/always-together.font
 Includes UnderscoreJS library by Jeremy Ashkenas:  
 https://github.com/jashkenas/underscore  
 https://github.com/jashkenas  
+
+Includes github-corners SVG icon by Tim Holman:  
+https://github.com/tholman/github-corners  
