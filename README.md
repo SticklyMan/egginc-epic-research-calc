@@ -9,6 +9,7 @@ https://www.reddit.com/r/EggsInc/comments/l4duqs/epic_research_golden_eggs_costs
 Special thanks to these contributors for taking their time to help improve and maintain this tool:  
 [derekpovah](https://github.com/derekpovah)
 [ivanjonas](https://github.com/ivanjonas)
+[SomeKittens](https://github.com/SomeKittens)
 
 Includes "Always Together" font by Skomii / PauloR:  
 http://www.dafont.com/always-together.font  
