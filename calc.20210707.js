@@ -247,6 +247,15 @@ var upgrades = {
 	}
 };
 
+function isEpicResearch(key) {
+	return key !== "hyperloopStation" &&
+		key !== "fuelTank";
+}
+
+function getDiscountMultiplier(key) {
+	return isEpicResearch(key) ? userData.epicDiscount/100 : 0;
+}
+
 
 // Data persistence helpers
 function save() {
@@ -316,7 +325,7 @@ function calculate() {
 		// Futures
 		var increaseCost = 0;
 		var desiredLevels = userData.increase[key];
-		var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+		var discountMultiplier = getDiscountMultiplier(key);
 		for (i=userData.upgrades[key]; i<userData.upgrades[key]+desiredLevels; i++) {
 			increaseCost += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
 		}
@@ -376,7 +385,7 @@ function calculate() {
 	else {
 		// Recalculate a full total including discount
 		_.each(upgrades, function(upgrade, key) {
-			var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+			var discountMultiplier = getDiscountMultiplier(key);
 			for (i=userData.upgrades[key]; i<upgrades[key].costs.length; i++) {
 				remaining += upgrade.costs[i] - Math.floor(upgrade.costs[i] * discountMultiplier);
 			}
@@ -457,7 +466,7 @@ function populateInputs() {
 function buy(key) {
 	document.querySelector("#lvl-"+key).value++;
 	document.querySelector("#fut-inc-"+key).value--;
-	var discountMultiplier = (key !== "hyperloopStation" ? userData.epicDiscount/100 : 0);
+	var discountMultiplier = getDiscountMultiplier(key);
 	document.querySelector("#goldeneggs").value -= upgrades[key].costs[userData.upgrades[key]] - Math.floor(upgrades[key].costs[userData.upgrades[key]] * discountMultiplier);
 
 	userUpdateIncrease(key);
