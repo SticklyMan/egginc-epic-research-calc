@@ -91,33 +91,26 @@ var upgrades = {
 		bonusDesc: "+{VAL}%",
 		bonusVal: 10
 	},
+	siloCapacity: {
+		costs: [500, 526, 552, 578, 605, 631, 657, 684, 710, 736, 763, 789, 815, 842, 868, 894, 921, 947, 973, 1000],
+		title: "Silo Capacity",
+		desc: "Increase away time per silo by 6 min",
+		bonusDesc: "+{VAL} min.",
+		bonusVal: 6
+	},
+	accountingTricks: {
+		costs: [250, 447, 644, 842, 1039, 1236, 1434, 1631, 1828, 2026, 2223, 2421, 2618, 2815, 3013, 3210, 3407, 3605, 3802, 4000],
+		title: "Accounting Tricks",
+		desc: "Increase farm valuation by 5%",
+		bonusDesc: "+{VAL}%",
+		bonusVal: 5
+	},
 	epicIntHatchery: {
 		costs: [25, 155, 285, 415, 546, 676, 806, 936, 1067, 1197, 1327, 1457, 1588, 1718, 1848, 1978, 2109, 2239, 2369, 2500],
 		title: "Epic Int. Hatcheries",
 		desc: "Increase internal hatchery rate by 5%",
 		bonusDesc: "+{VAL}%",
 		bonusVal: 5
-	},
-	videoDoubler: {
-		costs: [25, 250, 475, 700, 925, 1150, 1375, 1600, 1825, 2050, 2275, 2500],
-		title: "Video Doubler Time",
-		desc: "Increase video doubler time by 30 min.",
-		bonusDesc: "+{VAL} min.",
-		bonusVal: 30
-	},
-	epicClucking: {
-		costs: [20, 282, 544, 806, 1068, 1330, 1592, 1854, 2116, 2378, 2641, 2903, 3165, 3427, 3689, 3951, 4213, 4475, 4737, 5000],
-		title: "Epic Clucking",
-		desc: "+0.1% egg value bonus for each running chicken",
-		bonusDesc: "+{VAL}% / chicken",
-		bonusVal: 0.1
-	},
-	epicMultiplier: {
-		costs: [10, 110, 211, 312, 413, 514, 615, 716, 817, 918, 1019, 1120, 1220, 1321, 1422, 1523, 1624, 1725, 1826, 1927, 2028, 2129, 2230, 2330, 2431, 2532, 2633, 2734, 2835, 2936, 3037, 3138, 3239, 3340, 3440, 3541, 3642, 3743, 3844, 3945, 4046, 4147, 4248, 4349, 4450, 4550, 4651, 4752, 4853, 4954, 5055, 5156, 5257, 5358, 5459, 5560, 5660, 5761, 5862, 5963, 6064, 6165, 6266, 6367, 6468, 6569, 6670, 6770, 6871, 6972, 7073, 7174, 7275, 7376, 7477, 7578, 7679, 7780, 7880, 7981, 8082, 8183, 8284, 8385, 8486, 8587, 8688, 8789, 8890, 8990, 9091, 9192, 9293, 9394, 9495, 9596, 9697, 9798, 9899, 10000],
-		title: "Epic Multiplier",
-		desc: "Increase max running chicken bonus by 2.0x!",
-		bonusDesc: "+{VAL}x MAX",
-		bonusVal: 2
 	},
 	cheaperContractors: {
 		costs: [20, 240, 460, 680, 900, 1120, 1340, 1560, 1780, 2000],
@@ -140,19 +133,33 @@ var upgrades = {
 		bonusDesc: "-{VAL}%",
 		bonusVal: 5
 	},
-	siloCapacity: {
-		costs: [500, 526, 552, 578, 605, 631, 657, 684, 710, 736, 763, 789, 815, 842, 868, 894, 921, 947, 973, 1000],
-		title: "Silo Capacity",
-		desc: "Increase away time per silo by 6 min",
-		bonusDesc: "+{VAL} min.",
-		bonusVal: 6
+	epicClucking: {
+		costs: [20, 282, 544, 806, 1068, 1330, 1592, 1854, 2116, 2378, 2641, 2903, 3165, 3427, 3689, 3951, 4213, 4475, 4737, 5000],
+		title: "Epic Clucking",
+		desc: "+0.1% egg value bonus for each running chicken",
+		bonusDesc: "+{VAL}% / chicken",
+		bonusVal: 0.1
 	},
-	internalHatcherySharing: {
-		costs: [250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500],
-		title: "Internal Hatchery Sharing",
-		desc: "Full habs' internal hatcheries send +10% chicks to other habs",
-		bonusDesc: "{VAL}% shared",
+	epicMultiplier: {
+		costs: [10, 110, 211, 312, 413, 514, 615, 716, 817, 918, 1019, 1120, 1220, 1321, 1422, 1523, 1624, 1725, 1826, 1927, 2028, 2129, 2230, 2330, 2431, 2532, 2633, 2734, 2835, 2936, 3037, 3138, 3239, 3340, 3440, 3541, 3642, 3743, 3844, 3945, 4046, 4147, 4248, 4349, 4450, 4550, 4651, 4752, 4853, 4954, 5055, 5156, 5257, 5358, 5459, 5560, 5660, 5761, 5862, 5963, 6064, 6165, 6266, 6367, 6468, 6569, 6670, 6770, 6871, 6972, 7073, 7174, 7275, 7376, 7477, 7578, 7679, 7780, 7880, 7981, 8082, 8183, 8284, 8385, 8486, 8587, 8688, 8789, 8890, 8990, 9091, 9192, 9293, 9394, 9495, 9596, 9697, 9798, 9899, 10000],
+		title: "Epic Multiplier",
+		desc: "Increase max running chicken bonus by 2.0x!",
+		bonusDesc: "+{VAL}x MAX",
+		bonusVal: 2
+	},
+	droneRewards: {
+		costs: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000],
+		title: "Drone Rewards",
+		desc: "Increase your chances for bigger drone rewards by 10%",
+		bonusDesc: "+{VAL}%",
 		bonusVal: 10
+	},
+	videoDoubler: {
+		costs: [25, 250, 475, 700, 925, 1150, 1375, 1600, 1825, 2050, 2275, 2500],
+		title: "Video Doubler Time",
+		desc: "Increase video doubler time by 30 min.",
+		bonusDesc: "+{VAL} min.",
+		bonusVal: 30
 	},
 	internalHatcheryCalm: {
 		costs: [10, 114, 219, 324, 428, 533, 638, 743, 847, 952, 1057, 1162, 1266, 1371, 1476, 1581, 1685, 1790, 1895, 2000],
@@ -160,13 +167,6 @@ var upgrades = {
 		desc: "Increase internal hatchery rate by 10% while away",
 		bonusDesc: "+{VAL}%",
 		bonusVal: 10
-	},
-	accountingTricks: {
-		costs: [250, 447, 644, 842, 1039, 1236, 1434, 1631, 1828, 2026, 2223, 2421, 2618, 2815, 3013, 3210, 3407, 3605, 3802, 4000],
-		title: "Accounting Tricks",
-		desc: "Increase farm valuation by 5%",
-		bonusDesc: "+{VAL}%",
-		bonusVal: 5
 	},
 	soulFood: {
 		costs: [500, 532, 564, 597, 629, 661, 694, 726, 758, 791, 823, 856, 888, 920, 953, 985, 1017, 1050, 1082, 1115, 1147, 1179, 1212, 1244, 1276, 1309, 1341, 1374, 1406, 1438, 1471, 1503, 1535, 1568, 1600, 1633, 1665, 1697, 1730, 1762, 1794, 1827, 1859, 1892, 1924, 1956, 1989, 2021, 2053, 2086, 2118, 2151, 2183, 2215, 2248, 2280, 2312, 2345, 2377, 2410, 2442, 2474, 2507, 2539, 2571, 2604, 2636, 2669, 2701, 2733, 2766, 2798, 2830, 2863, 2895, 2928, 2960, 2992, 3025, 3057, 3089, 3122, 3154, 3187, 3219, 3251, 3284, 3316, 3348, 3381, 3413, 3446, 3478, 3510, 3543, 3575, 3607, 3640, 3672, 3705, 3737, 3769, 3802, 3834, 3866, 3899, 3931, 3964, 3996, 4028, 4061, 4093, 4125, 4158, 4190, 4223, 4255, 4287, 4320, 4352, 4384, 4417, 4449, 4482, 4514, 4546, 4579, 4611, 4643, 4676, 4708, 4741, 4773, 4805, 4838, 4870, 4902, 4935, 4967, 5000],
@@ -179,13 +179,6 @@ var upgrades = {
 		costs: [4000, 4105, 4210, 4315, 4421, 4526, 4631, 4736, 4842, 4947, 5052, 5157, 5263, 5368, 5473, 5578, 5684, 5789, 5894, 6000],
 		title: "Prestige Bonus",
 		desc: "Earn +10% soul eggs when you prestige",
-		bonusDesc: "+{VAL}%",
-		bonusVal: 10
-	},
-	droneRewards: {
-		costs: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000],
-		title: "Drone Rewards",
-		desc: "Increase your chances for bigger drone rewards by 10%",
 		bonusDesc: "+{VAL}%",
 		bonusVal: 10
 	},
@@ -203,12 +196,12 @@ var upgrades = {
 		bonusDesc: "+{VAL}%",
 		bonusVal: 5
 	},
-	prophecyBonus: {
-		costs: [100000, 325000, 550000, 775000, 1000000],
-		title: "Prophecy Bonus",
-		desc: "Increase bonus per egg of prophecy by +1% (compounding)",
-		bonusDesc: "+{VAL}%",
-		bonusVal: 1
+	internalHatcherySharing: {
+		costs: [250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500],
+		title: "Internal Hatchery Sharing",
+		desc: "Full habs' internal hatcheries send +10% chicks to other habs",
+		bonusDesc: "{VAL}% shared",
+		bonusVal: 10
 	},
 	holdToResearch: {
 		costs: [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000],
@@ -216,6 +209,13 @@ var upgrades = {
 		desc: "Increase repetition rate when holding down research button by 25%",
 		bonusDesc: "+{VAL}%",
 		bonusVal: 25
+	},
+	prophecyBonus: {
+		costs: [100000, 325000, 550000, 775000, 1000000],
+		title: "Prophecy Bonus",
+		desc: "Increase bonus per egg of prophecy by +1% (compounding)",
+		bonusDesc: "+{VAL}%",
+		bonusVal: 1
 	},
 	ftlDrive: {
 		costs: [5000, 6875, 8750, 10625, 12500, 14375, 16250, 18125, 20000, 21875, 23750, 25625, 27500, 29375, 31250, 33125, 35000, 36875, 38750, 40625, 42500, 44375, 46250, 48125, 50000],
