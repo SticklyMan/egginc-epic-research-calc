@@ -242,8 +242,8 @@ var upgrades = {
 		costs: [50000, 250000, 1000000],
 		title: "Fuel Tank",
 		desc: "Increases the capacity of your fuel tank [Pro Permit Only]",
-		bonusDesc: "✓",
-		bonusVal: 0
+		bonusDesc: "Lvl {VAL}",
+		bonusVal: 1
 	}
 };
 
