@@ -221,7 +221,7 @@ var upgrades = {
 		costs: [5000, 6875, 8750, 10625, 12500, 14375, 16250, 18125, 20000, 21875, 23750, 25625, 27500, 29375, 31250, 33125, 35000, 36875, 38750, 40625, 42500, 44375, 46250, 48125, 50000],
 		title: "FTL Drive Upgrades",
 		desc: "Reduce Artifact mission time of FTL ships by 1%",
-		bonusDesc: "+{VAL}%",
+		bonusDesc: "-{VAL}%",
 		bonusVal: 1
 	},
 	zeroG: {
@@ -241,7 +241,7 @@ var upgrades = {
 	fuelTank: {
 		costs: [50000, 250000, 1000000],
 		title: "Fuel Tank",
-		desc: "Increases the capacity of your fuel tank",
+		desc: "Increases the capacity of your fuel tank [Pro Permit Only]",
 		bonusDesc: "✓",
 		bonusVal: 0
 	}
