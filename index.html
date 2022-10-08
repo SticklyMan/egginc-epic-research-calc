@@ -32,11 +32,11 @@
 						<tr id="upgradeRow-<%- key %>">
 							<td><%- upgrade.title %></td>
 							<td class="showdesc"><%- upgrade.desc %></td>
-							<td class="showbonus" style="width: 86px"id="bonus-<%- key %>">-</td>
-							<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="lvl-<%- key %>" tabindex="<%- 10+tabindex %>"></div> / <%- upgrade.costs.length %></td>
-							<td class="showspent" style="width: 58px" id="spent-<%- key %>">-</td>
-							<td class="showremaining" style="width: 58px" id="remaining-<%- key %>">-</td>
-							<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
+							<td class="showbonus" style="width: 88px"id="bonus-<%- key %>">-</td>
+							<td style="width: 86px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="lvl-<%- key %>" tabindex="<%- 10+tabindex %>"></div> / <%- upgrade.costs.length %></td>
+							<td class="showspent" style="width: 62px" id="spent-<%- key %>">-</td>
+							<td class="showremaining" style="width: 62px" id="remaining-<%- key %>">-</td>
+							<td class="showtotal" style="width: 60px" ><%- upgrade.total.toLocaleString() %></td>
 						</tr>
 					<% }); %>
 					<tr class="bold-text">
