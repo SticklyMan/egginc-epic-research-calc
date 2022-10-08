@@ -1,143 +1,144 @@
+<!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<title>Egg, Inc. Golden Egg Costs Calculator</title>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Egg, Inc. Golden Egg Costs Calculator</title>
 
-	<script src="underscore-min.20210626.js"></script>
-	<script type="text/javascript" src="calc.20220116.js"></script>
-	<link rel="stylesheet" href="calc.20210626.css">
-</head>
-<body>
-	<div id="content"></div>
+		<script src="underscore-min.20210626.js"></script>
+		<script type="text/javascript" src="calc.20220116.js"></script>
+		<link rel="stylesheet" href="calc.20210626.css" />
+	</head>
+	<body>
+		<div id="content"></div>
 
-	<!-- Template -->
-	<script type="text/template" class="template">
-		<h1>Egg, Inc. Golden Eggs Costs Calculator (<a href="archives/">v1.22.3</a>)</h1>
-		<div class="modal">
-			<h2>Current Statistics</h2>
-			<table id="stats-table">
-				<tr>
-					<th>Name</th>
-					<th class="showdesc">Description</th>
-					<th class="showbonus">Bonus</th>
-					<th>Level</th>
-					<th class="showspent">Spent</th>
-					<th class="showremaining">Remaining</th>
-					<th class="showtotal">Total Cost</th>
-				</tr>
-				<%	var tabindex = 0;
-					_.each( upgrades, function( upgrade, key ) {
-						tabindex++; %>
-					<tr id="upgradeRow-<%- key %>">
-						<td><%- upgrade.title %></td>
-						<td class="showdesc"><%- upgrade.desc %></td>
-						<td class="showbonus" style="width: 86px"id="bonus-<%- key %>">-</td>
-						<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="lvl-<%- key %>" tabindex="<%- 10+tabindex %>"></div> / <%- upgrade.costs.length %></td>
-						<td class="showspent" style="width: 58px" id="spent-<%- key %>">-</td>
-						<td class="showremaining" style="width: 58px" id="remaining-<%- key %>">-</td>
-						<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
+		<!-- Template -->
+		<script type="text/template" class="template">
+			<h1>Egg, Inc. Golden Eggs Costs Calculator (<a href="archives/">v1.22.3</a>)</h1>
+			<div class="modal">
+				<h2>Current Statistics</h2>
+				<table id="stats-table">
+					<tr>
+						<th>Name</th>
+						<th class="showdesc">Description</th>
+						<th class="showbonus">Bonus</th>
+						<th>Level</th>
+						<th class="showspent">Spent</th>
+						<th class="showremaining">Remaining</th>
+						<th class="showtotal">Total Cost</th>
 					</tr>
-				<% }); %>
-				<tr class="bold-text">
-					<td class="noborder"></td>
-					<td class="noborder showdesc"></td>
-					<td class="noborder showbonus"></td>
-					<td id="total-levels"><%- totals.levels %></td>
-					<td id="total-spent" class="showspent"><%- totals.cost %></td>
-					<td id="total-remaining" class="showremaining"><%- totals.levels %></td>
-					<td class="showtotal"><%- totals.cost.toLocaleString() %></td>
-				</tr>
-			</table>
-			<div style="margin-top: 5px;">
-				<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
-				<label class="noselect"><input type="checkbox" checked="true" id="chkbonus" tabindex="41"> Show Bonus</label>
-				<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
-				<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
-				<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
-				<label class="noselect"><input type="checkbox" checked="false" id="sethidecompleted" tabindex="45"> Hide Completed</label>
-			</div>
-		</div>
-
-		<div class="modal">
-			<h2>Future Planning</h2>
-			<div class="padright padleft">
-				<div class="noselect inline left">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
-				<div class="noselect inline left padleft padbottom">Piggy Level <input type="number" min="1" id="piggylevel" tabindex="51"style="width: 38px"> +<span id="piggybonus">0</span>%</div>
-				<div class="noselect inline left" style="margin-left: 4px">(+<span id="piggybonuscalc">0</span>)</div>
-
-				<button class="right" id="crackpiggy" onclick="crackThePiggy()" tabindex="53">Crack Open (+<span id="piggycracktotal">0</span>)</button>
-				<div class="noselect inline right padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
-			</div>
-			<table id="future-table">
-				<tr>
-					<th>Name</th>
-					<th>Level</th>
-					<th>Desired Increase</th>
-					<th>Cost</th>
-					<th>Next Price</th>
-					<th>Buy?</th>
-				</tr>
-				<%	var tabindex = 0;
-					_.each( upgrades, function( upgrade, key ) {
-						tabindex++; %>
-					<tr id="planRow-<%- key %>">
-						<td><%- upgrade.title %></td>
-						<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-lvl-<%- key %>" tabindex="<%- 100+tabindex %>"></div> / <%- upgrade.costs.length %></td>
-						<td style="width: 100px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-inc-<%- key %>" tabindex="<%- 200+tabindex %>"></div></td>
-						<td style="width: 82px" id="fut-cost-<%- key %>"></td>
-						<td style="width: 82px" id="fut-next-<%- key %>"></td>
-						<td><button id="fut-buy-<%- key %>" onclick="buy('<%- key %>')" tabindex="<%- 300+tabindex %>">Buy!</button></td>
+					<%	var tabindex = 0;
+						_.each( upgrades, function( upgrade, key ) {
+							tabindex++; %>
+						<tr id="upgradeRow-<%- key %>">
+							<td><%- upgrade.title %></td>
+							<td class="showdesc"><%- upgrade.desc %></td>
+							<td class="showbonus" style="width: 86px"id="bonus-<%- key %>">-</td>
+							<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="lvl-<%- key %>" tabindex="<%- 10+tabindex %>"></div> / <%- upgrade.costs.length %></td>
+							<td class="showspent" style="width: 58px" id="spent-<%- key %>">-</td>
+							<td class="showremaining" style="width: 58px" id="remaining-<%- key %>">-</td>
+							<td class="showtotal" style="width: 58px" ><%- upgrade.total.toLocaleString() %></td>
+						</tr>
+					<% }); %>
+					<tr class="bold-text">
+						<td class="noborder"></td>
+						<td class="noborder showdesc"></td>
+						<td class="noborder showbonus"></td>
+						<td id="total-levels"><%- totals.levels %></td>
+						<td id="total-spent" class="showspent"><%- totals.cost %></td>
+						<td id="total-remaining" class="showremaining"><%- totals.levels %></td>
+						<td class="showtotal"><%- totals.cost.toLocaleString() %></td>
 					</tr>
-				<% }); %>
-				<tr class="bold-text">
-					<td class="noborder"></td>
-					<td id="total-levels-2"><%- totals.levels %></td>
-					<td id="total-desired-levels"></td>
-					<td><span id="total-desired-cost"></span></td>
-					<td class="noborder"></td>
-					<td class="noborder"></td>
-				</tr>
-			</table>
-			<div class="innercontent" style="margin-top: 5px;">
-				<div class="noselect inline right">
-					<select class="right" id="optcalctrucktype" name="optcalctrucktype" tabindex="402">
-						<option id="opt-truck" value="0" selected>Truckload (10,000 @ $19.99)</option>
-						<option id="opt-pallet" value="1">Pallet (4,400 @ $9.99)</option>
-						<option id="opt-crate" value="2">Big Crate (2,000 @ $4.99)</option>
-					</select>
-					<label class="noselect right padleft" style="margin-right: 5px;"> Cost Using</label>
-				</div>
-				<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcpiggy" tabindex="401"> Include a Piggy Crack</label>
-				<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcdesired" tabindex="400"> Calc Desired Only</label>
-			</div>
-			<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
-				<div class="noselect inline right padleft">Epic % Discount <input type="number" min="0" max="100" id="epicdiscount" tabindex="404" style="width: 38px"></div>
-				<div class="noselect inline right padleft">Piggy % Discount ($<span id="piggycost">4.99</span>) <input type="number" min="0" max="100" id="piggydiscount" tabindex="403" style="width: 38px"></div>
-				<b class="right">Events:</b>
-			</div>
-			<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
-				<div class="right padleft">Remaining Golden Eggs: <b id="fut-egg-remain"></b></div>
-				<div class="right">Remaining Cost: <b id="fut-egg-remain-cost"></b></div>
-			</div>
-		</div>
-
-		<div class="modal">
-			<h2>Import/Export</h2>
-			<div class="innercontent">
-				<textarea id="exportfield" rows="8" tabindex="500"></textarea>
-				<div class="buttonrow">
-					<button onclick="loadBase64()" class="left" tabindex="501">Load from Textfield</button>
-					<button onclick="exportBase64()" class="left" tabindex="502">Export to Textfield</button>
-					<button onclick="reset()" class="right" tabindex="503">Clear All Data</button>
+				</table>
+				<div style="margin-top: 5px;">
+					<label class="noselect"><input type="checkbox" checked="true" id="chkdesc" tabindex="40"> Show Description</label>
+					<label class="noselect"><input type="checkbox" checked="true" id="chkbonus" tabindex="41"> Show Bonus</label>
+					<label class="noselect"><input type="checkbox" checked="true" id="chkspent" tabindex="42"> Show Spent</label>
+					<label class="noselect"><input type="checkbox" checked="true" id="chkremaining" tabindex="43"> Show Remaining</label>
+					<label class="noselect"><input type="checkbox" checked="true" id="chktotal" tabindex="44"> Show Total</label>
+					<label class="noselect"><input type="checkbox" checked="false" id="sethidecompleted" tabindex="45"> Hide Completed</label>
 				</div>
 			</div>
-		</div>
 
-		<h3>Created by Stickly Man!#6756</h3>
-		<h3>Current as of Egg, Inc. version 1.22.3. <a href="archives/">Click here</a> for older versions.</h3>
-		<h3><a target="_blank", href="https://wasmegg.netlify.app/">Check out some other useful Egg, Inc. tools</a> made by mk2#4590!</h3>
-	</script>
+			<div class="modal">
+				<h2>Future Planning</h2>
+				<div class="padright padleft">
+					<div class="noselect inline left">Piggy Bank <input type="number" min="0" id="piggybank" tabindex="50"></div>
+					<div class="noselect inline left padleft padbottom">Piggy Level <input type="number" min="1" id="piggylevel" tabindex="51"style="width: 38px"> +<span id="piggybonus">0</span>%</div>
+					<div class="noselect inline left" style="margin-left: 4px">(+<span id="piggybonuscalc">0</span>)</div>
 
-	<a href="https://github.com/SticklyMan/egginc-epic-research-calc/" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-</body>
+					<button class="right" id="crackpiggy" onclick="crackThePiggy()" tabindex="53">Crack Open (+<span id="piggycracktotal">0</span>)</button>
+					<div class="noselect inline right padbottom">Golden Eggs <input type="number" min="0" id="goldeneggs" tabindex="52"></div>
+				</div>
+				<table id="future-table">
+					<tr>
+						<th>Name</th>
+						<th>Level</th>
+						<th>Desired Increase</th>
+						<th>Cost</th>
+						<th>Next Price</th>
+						<th>Buy?</th>
+					</tr>
+					<%	var tabindex = 0;
+						_.each( upgrades, function( upgrade, key ) {
+							tabindex++; %>
+						<tr id="planRow-<%- key %>">
+							<td><%- upgrade.title %></td>
+							<td style="width: 82px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-lvl-<%- key %>" tabindex="<%- 100+tabindex %>"></div> / <%- upgrade.costs.length %></td>
+							<td style="width: 100px"><div class="noselect inline"><input type="number" min="0" max="<%- upgrade.costs.length %>" id="fut-inc-<%- key %>" tabindex="<%- 200+tabindex %>"></div></td>
+							<td style="width: 82px" id="fut-cost-<%- key %>"></td>
+							<td style="width: 82px" id="fut-next-<%- key %>"></td>
+							<td><button id="fut-buy-<%- key %>" onclick="buy('<%- key %>')" tabindex="<%- 300+tabindex %>">Buy!</button></td>
+						</tr>
+					<% }); %>
+					<tr class="bold-text">
+						<td class="noborder"></td>
+						<td id="total-levels-2"><%- totals.levels %></td>
+						<td id="total-desired-levels"></td>
+						<td><span id="total-desired-cost"></span></td>
+						<td class="noborder"></td>
+						<td class="noborder"></td>
+					</tr>
+				</table>
+				<div class="innercontent" style="margin-top: 5px;">
+					<div class="noselect inline right">
+						<select class="right" id="optcalctrucktype" name="optcalctrucktype" tabindex="402">
+							<option id="opt-truck" value="0" selected>Truckload (10,000 @ $19.99)</option>
+							<option id="opt-pallet" value="1">Pallet (4,400 @ $9.99)</option>
+							<option id="opt-crate" value="2">Big Crate (2,000 @ $4.99)</option>
+						</select>
+						<label class="noselect right padleft" style="margin-right: 5px;"> Cost Using</label>
+					</div>
+					<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcpiggy" tabindex="401"> Include a Piggy Crack</label>
+					<label class="noselect right"><input type="checkbox" checked="false" id="chkcalcdesired" tabindex="400"> Calc Desired Only</label>
+				</div>
+				<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
+					<div class="noselect inline right padleft">Epic % Discount <input type="number" min="0" max="100" id="epicdiscount" tabindex="404" style="width: 38px"></div>
+					<div class="noselect inline right padleft">Piggy % Discount ($<span id="piggycost">4.99</span>) <input type="number" min="0" max="100" id="piggydiscount" tabindex="403" style="width: 38px"></div>
+					<b class="right">Events:</b>
+				</div>
+				<div class="innercontent clear" style="margin-bottom: 20px; padding-top: 5px;">
+					<div class="right padleft">Remaining Golden Eggs: <b id="fut-egg-remain"></b></div>
+					<div class="right">Remaining Cost: <b id="fut-egg-remain-cost"></b></div>
+				</div>
+			</div>
+
+			<div class="modal">
+				<h2>Import/Export</h2>
+				<div class="innercontent">
+					<textarea id="exportfield" rows="8" tabindex="500"></textarea>
+					<div class="buttonrow">
+						<button onclick="loadBase64()" class="left" tabindex="501">Load from Textfield</button>
+						<button onclick="exportBase64()" class="left" tabindex="502">Export to Textfield</button>
+						<button onclick="reset()" class="right" tabindex="503">Clear All Data</button>
+					</div>
+				</div>
+			</div>
+
+			<h3>Created by Stickly Man!#6756</h3>
+			<h3>Current as of Egg, Inc. version 1.22.3. <a href="archives/">Click here</a> for older versions.</h3>
+			<h3><a target="_blank", href="https://wasmegg.netlify.app/">Check out some other useful Egg, Inc. tools</a> made by mk2#4590!</h3>
+		</script>
+
+		<a href="https://github.com/SticklyMan/egginc-epic-research-calc/" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+	</body>
 </html>
