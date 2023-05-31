@@ -401,7 +401,7 @@ function calculate() {
 	document.querySelector("#fut-egg-remain").innerHTML = remaining.toLocaleString();
 
 	// Calculate purchase cost
-	var piggyCost = 4.99 - (4.99 * userData.piggyDiscount / 100).toFixed(2);
+	var piggyCost = 5.99 - (5.99 * userData.piggyDiscount / 100).toFixed(2);
 	document.querySelector("#piggycost").innerHTML = piggyCost.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
 	var purchaseQty = 1;
