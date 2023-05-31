@@ -359,11 +359,10 @@ function calculate() {
 	document.querySelector("#total-desired-levels").innerHTML = totalDesiredLevels;
 
 	// Piggy Bank calculations
-	var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
-	var piggyBonusCalc = Math.ceil(userData.piggyBank * (piggyBonus / 100));
-	var piggyCrackTotal = userData.piggyBank + piggyBonusCalc;
-	document.querySelector("#piggybonus").innerHTML = piggyBonus;
-	document.querySelector("#piggybonuscalc").innerHTML = piggyBonusCalc.toLocaleString();
+	var piggyBonus = getPiggyBankBonus(userData.piggyLevel, userData.piggyBank);
+	var piggyCrackTotal = userData.piggyBank + piggyBonus;
+	document.querySelector("#piggybonus").innerHTML = Math.round(getPiggyBankBonusPercent(userData.piggyLevel) * 100);
+	document.querySelector("#piggybonuscalc").innerHTML = piggyBonus.toLocaleString();
 	document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal.toLocaleString();
 
 	document.querySelector("#crackpiggy").disabled = userData.piggyBank < 300;
@@ -429,14 +428,20 @@ function calculate() {
 	stripeTables();
 }
 
-function getPiggyBankBonus(level) {
+function getPiggyBankBonusPercent(level) {
 	if (level === 1) {
-		return 2;
+		return 0.02;
 	}
-	if (level === 2) {
-		return 25;
+	else if (level === 2) {
+		return 0.25;
 	}
-	return 10 * (level + 1);
+	else {
+		return .1 * (level + 1);
+	}
+}
+
+function getPiggyBankBonus(level, piggyBank) {
+	return Math.floor(getPiggyBankBonusPercent(level) * piggyBank);
 }
 
 function populateInputs() {
@@ -479,10 +484,9 @@ function crackThePiggy() {
 	var level = document.querySelector("#piggylevel");
 	var bank = document.querySelector("#piggybank");
 
-	var piggyBonus = getPiggyBankBonus(userData.piggyLevel);
-	var piggyBonusCalc = Math.ceil(userData.piggyBank * (piggyBonus / 100));
+	var piggyBonus = getPiggyBankBonus(userData.piggyLevel, userData.piggyBank);
 
-	eggs.value = parseInt(eggs.value) + userData.piggyBank + piggyBonusCalc;
+	eggs.value = parseInt(eggs.value) + userData.piggyBank + piggyBonus;
 	bank.value = 0;
 	level.value++;
 	userUpdateEggs();
