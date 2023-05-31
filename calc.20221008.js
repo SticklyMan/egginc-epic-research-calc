@@ -363,6 +363,7 @@ function calculate() {
 	var piggyCrackTotal = userData.piggyBank + piggyBonus;
 	document.querySelector("#piggybonus").innerHTML = Math.round(getPiggyBankBonusPercent(userData.piggyLevel) * 100);
 	document.querySelector("#piggybonuscalc").innerHTML = piggyBonus.toLocaleString();
+	document.querySelector("#piggycap").innerHTML = getPiggyFullCap(userData.piggyLevel).toLocaleString();
 	document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal.toLocaleString();
 
 	document.querySelector("#crackpiggy").disabled = userData.piggyBank < 300;
@@ -442,6 +443,17 @@ function getPiggyBankBonusPercent(level) {
 
 function getPiggyBankBonus(level, piggyBank) {
 	return Math.floor(getPiggyBankBonusPercent(level) * piggyBank);
+}
+
+function getPiggyFullCap(level) {
+	if (level === 1) {
+		return 7521;
+	}
+	else {
+		// TODO: This formula is not confirmed, definitely inaccurate below level 10
+		return 45000 + (5000 * userData.piggyLevel);
+
+	}
 }
 
 function populateInputs() {
