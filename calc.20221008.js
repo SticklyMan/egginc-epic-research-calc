@@ -369,11 +369,11 @@ function calculate() {
 	document.querySelector("#crackpiggy").disabled = userData.piggyBank < 300;
 
 	// Update truckload options based on piggy level
-	var truckloadQty = (10000 + (userData.piggyLevel-1) * 2500);
+	var truckloadQty = (6000 + (userData.piggyLevel * 4000));
 	document.querySelector("#opt-truck").innerHTML = "Truckload (" + truckloadQty.toLocaleString() + " @ $19.99)";
-	var palletQty = (4400 + (userData.piggyLevel-1) * 1100);
+	var palletQty = (2900 + (userData.piggyLevel * 1500));
 	document.querySelector("#opt-pallet").innerHTML = "Pallet (" + palletQty.toLocaleString() + " @ $9.99)";
-	var crateQty = (2000 + (userData.piggyLevel-1) * 500);
+	var crateQty = (1300 + (userData.piggyLevel * 700));
 	document.querySelector("#opt-crate").innerHTML = "Big Crate (" + crateQty.toLocaleString() + " @ $4.99)";
 
 	// Calculate remaining eggs
