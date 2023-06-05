@@ -446,13 +446,12 @@ function getPiggyBankBonus(level, piggyBank) {
 }
 
 function getPiggyFullCap(level) {
-	if (level === 1) {
-		return 7521;
+	// Not 100% confirmed, but appears to be close enough
+	if (level < 10) {
+		return 7500 + (10000 * (level-1));
 	}
 	else {
-		// TODO: This formula is not confirmed, definitely inaccurate below level 10
-		return 45000 + (5000 * userData.piggyLevel);
-
+		return 50000 + (5000 * (level-1));
 	}
 }
 
