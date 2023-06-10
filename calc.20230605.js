@@ -204,7 +204,7 @@ var upgrades = {
 		bonusVal: 10,
 	},
 	holdToResearch: {
-		costs: [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000],
+		costs: [5000, 5789, 6578, 7368, 8157, 8947, 9736, 10526, 11315, 12105, 12894, 13684, 14473, 15263, 16052, 16842, 17631, 18421, 19210, 20000],
 		title: "Hold to Research",
 		desc: "Increase repetition rate when holding down research button by 25%",
 		bonusDesc: "+{VAL}%",
@@ -239,7 +239,7 @@ var upgrades = {
 		bonusVal: 0,
 	},
 	fuelTank: {
-		costs: [50000, 250000, 1000000],
+		costs: [50000, 250000, 1000000, 2000000, 3000000, 4000000, 5000000],
 		title: "Fuel Tank",
 		desc: "Increases the capacity of your fuel tank [Pro Permit Only]",
 		bonusDesc: "Lvl {VAL}",
