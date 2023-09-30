@@ -13,9 +13,9 @@ body {
 }
 .modal {
 	background-color: white;
-	border-radius: 25px;
+	border-radius: 20px;
 	padding-bottom: 15px;
-	margin-bottom: 25px;
+	margin-bottom: 20px;
 }
 .left {
 	float: left;
@@ -40,8 +40,8 @@ h2 {
 	color: white;
 	margin: 0 0 15px 0;
 	padding: 5px;
-	border-top-left-radius: 25px;
-	border-top-right-radius: 25px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
 	background-color: rgb(39, 110, 198);
 }
 h3 {
@@ -80,7 +80,7 @@ table input[type='number'] {
 	width: 40px;
 }
 input[type='checkbox'] {
-	margin-left: 25px;
+	margin-left: 20px;
 }
 
 .innercontent {
@@ -100,10 +100,10 @@ input[type='checkbox'] {
 }
 
 .padright {
-	margin-right: 25px;
+	margin-right: 20px;
 }
 .padleft {
-	margin-left: 25px;
+	margin-left: 20px;
 }
 .padbottom {
 	margin-bottom: 14px;
