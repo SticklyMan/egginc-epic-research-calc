@@ -431,13 +431,13 @@ function calculate() {
 
 function getPiggyBankBonusPercent(level) {
 	if (level === 1) {
-		return 0.02;
+		return Math.fround(0.02);
 	}
 	else if (level === 2) {
-		return 0.25;
+		return Math.fround(0.25);
 	}
 	else {
-		return .1 * (level + 1);
+		return Math.fround(.1 * (level + 1));
 	}
 }
 
