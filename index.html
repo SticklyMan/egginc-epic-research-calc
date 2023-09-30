@@ -66,6 +66,12 @@
 					<div class="noselect inline left padleft padbottom">¹Full at: <span id="piggycap">0</span></div>
 					<div class="noselect inline left padleft padbottom">Piggy Level <input type="number" min="1" id="piggylevel" tabindex="51" style="width: 38px"> +<span id="piggybonus">0</span>%</div>
 					<div class="noselect inline left padleft padbottom">Bonus: +<span id="piggybonuscalc">0</span></div>
+					<select class="padleft left" id="optultralevel" name="optultralevel" tabindex="52">
+						<option id="opt-ultra0" value="0" selected>No Ultra</option>
+						<option id="opt-ultra1" value="1">Ultra - Standard</option>
+						<option id="opt-ultra2" value="2">Ultra - Pro</option>
+					</select>
+					<div class="noselect inline left padleft padbottom">Ultra Bonus: +<span id="piggyultrabonuscalc">0</span></div>
 				</div>
 				<div class="padright padleft clear">
 					<button class="left" id="crackpiggy" onclick="crackThePiggy()" tabindex="53">Crack Open (+<span id="piggycracktotal">0</span>)</button>

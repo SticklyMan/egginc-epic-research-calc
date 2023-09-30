@@ -8,6 +8,7 @@ var initialUserData = {
 	epicCalcIncludePiggy: false,
 	epicCalcTruckType: 0, // 0-Truckload, 1-Pallet, 2-Big Crate
 	epicDiscount: 0,
+	ultraLevel: 0,
 	hideCompleted: false,
 	columns: {
 		desc: true,
@@ -360,9 +361,11 @@ function calculate() {
 
 	// Piggy Bank calculations
 	var piggyBonus = getPiggyBankBonus(userData.piggyLevel, userData.piggyBank);
-	var piggyCrackTotal = userData.piggyBank + piggyBonus;
+	var piggyUltraBonus = getPiggyBankUltraBonus(userData.piggyLevel, userData.ultraLevel, userData.piggyBank);
+	var piggyCrackTotal = userData.piggyBank + piggyBonus + piggyUltraBonus;
 	document.querySelector("#piggybonus").innerHTML = Math.round(getPiggyBankBonusPercent(userData.piggyLevel) * 100);
 	document.querySelector("#piggybonuscalc").innerHTML = piggyBonus.toLocaleString();
+	document.querySelector("#piggyultrabonuscalc").innerHTML = piggyUltraBonus.toLocaleString();
 	document.querySelector("#piggycap").innerHTML = getPiggyFullCap(userData.piggyLevel).toLocaleString();
 	document.querySelector("#piggycracktotal").innerHTML = piggyCrackTotal.toLocaleString();
 
@@ -445,6 +448,20 @@ function getPiggyBankBonus(level, piggyBank) {
 	return Math.floor(getPiggyBankBonusPercent(level) * piggyBank);
 }
 
+function getPiggyBankUltraBonusPercent(ultraLevel) {
+	if (ultraLevel === 1) {
+		return 0.25;
+	}
+	else if (ultraLevel === 2) {
+		return 0.4;
+	}
+	return 0;
+}
+
+function getPiggyBankUltraBonus(level, ultraLevel, piggyBank) {
+	return Math.floor(getPiggyBankUltraBonusPercent(ultraLevel) * (piggyBank + getPiggyBankBonus(level, piggyBank)));
+}
+
 function getPiggyFullCap(level) {
 	// Not 100% confirmed, but appears to be close enough
 	if (level < 10) {
@@ -472,6 +489,7 @@ function populateInputs() {
 	document.querySelector("#piggylevel").value = userData.piggyLevel;
 	document.querySelector("#piggybank").value = userData.piggyBank;
 	document.querySelector("#piggydiscount").value = userData.piggyDiscount;
+	document.querySelector("#optultralevel").value = userData.ultraLevel;
 	document.querySelector("#chkcalcdesired").checked = userData.epicCalcOnlyDesired;
 	document.querySelector("#chkcalcpiggy").checked = userData.epicCalcIncludePiggy;
 	document.querySelector("#optcalctrucktype").value = userData.epicCalcTruckType;
@@ -495,7 +513,7 @@ function crackThePiggy() {
 	var level = document.querySelector("#piggylevel");
 	var bank = document.querySelector("#piggybank");
 
-	var piggyBonus = getPiggyBankBonus(userData.piggyLevel, userData.piggyBank);
+	var piggyBonus = getPiggyBankBonus(userData.piggyLevel, userData.piggyBank) + getPiggyBankUltraBonus(userData.piggyLevel, userData.ultraLevel, userData.piggyBank)
 
 	eggs.value = parseInt(eggs.value) + userData.piggyBank + piggyBonus;
 	bank.value = 0;
@@ -585,6 +603,12 @@ function userUpdateEggs() {
 	newLevel = Math.max(newLevel, 1);
 	level.value = newLevel;
 	userData.piggyLevel = newLevel;
+
+	var ultraLevel = document.querySelector("#optultralevel");
+	var newLevel = parseInt(ultraLevel.value) || 0;
+	newLevel = Math.min(Math.max(newLevel, 0), 2);
+	ultraLevel.value = newLevel;
+	userData.ultraLevel = newLevel;
 
 	var piggyDiscount = document.querySelector("#piggydiscount");
 	var newpiggyDiscount = parseInt(piggyDiscount.value) || 0;
@@ -682,6 +706,7 @@ window.onload = function() {
 	document.querySelector("#piggylevel").addEventListener("change", userUpdateEggs);
 	document.querySelector("#piggybank").addEventListener("change", userUpdateEggs);
 	document.querySelector("#piggydiscount").addEventListener("change", userUpdateEggs);
+	document.querySelector("#optultralevel").addEventListener("change", userUpdateEggs);
 	document.querySelector("#chkcalcdesired").addEventListener("change", userUpdateEggs);
 	document.querySelector("#chkcalcpiggy").addEventListener("change", userUpdateEggs);
 	document.querySelector("#optcalctrucktype").addEventListener("change", userUpdateEggs);
